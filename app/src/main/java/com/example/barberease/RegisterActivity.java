@@ -18,8 +18,11 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private FirebaseAuth mAuth;
 
+    private EditText fullnameEditText;
+    private EditText phoneEditText;
     private EditText emailEditText;
     private EditText passwordEditText;
+    private EditText confirmPasswordEditText;
     private Button registerButton;
 
     @Override
@@ -29,8 +32,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        fullnameEditText = findViewById(R.id.fullname);
+        phoneEditText = findViewById(R.id.phone);
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
+        confirmPasswordEditText = findViewById(R.id.confirm_password);
         registerButton = findViewById(R.id.register_button);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -42,8 +48,21 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
+        String fullname = fullnameEditText.getText().toString().trim();
+        String phone = phoneEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
+        String confirmPassword = confirmPasswordEditText.getText().toString().trim();
+
+        if (TextUtils.isEmpty(fullname)) {
+            fullnameEditText.setError("Full Name is required.");
+            return;
+        }
+
+        if (TextUtils.isEmpty(phone)) {
+            phoneEditText.setError("Phone Number is required.");
+            return;
+        }
 
         if (TextUtils.isEmpty(email)) {
             emailEditText.setError("Email is required.");
@@ -52,6 +71,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(password)) {
             passwordEditText.setError("Password is required.");
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            confirmPasswordEditText.setError("Passwords do not match.");
             return;
         }
 
@@ -74,6 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
+            // You can save additional user information like fullname and phone to Firestore or Realtime Database
             startActivity(new Intent(RegisterActivity.this, MainActivity.class));
             finish();
         }

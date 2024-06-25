@@ -1,4 +1,5 @@
 package com.example.barberease;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -75,8 +76,14 @@ public class loginActivity extends AppCompatActivity {
             return;
         }
 
+        // Show loading indicator
+        // progressBar.setVisibility(View.VISIBLE);
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
+                    // Hide loading indicator
+                    // progressBar.setVisibility(View.GONE);
+
                     if (task.isSuccessful()) {
                         // Sign in success
                         Log.d(TAG, "signInWithEmail:success");
@@ -85,9 +92,7 @@ public class loginActivity extends AppCompatActivity {
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(loginActivity.this, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
-                        updateUI(null);
+                        Toast.makeText(loginActivity.this, "Invalid email or password.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -98,4 +103,5 @@ public class loginActivity extends AppCompatActivity {
             finish();
         }
     }
+
 }
