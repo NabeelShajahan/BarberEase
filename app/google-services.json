@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "87826987902",
+    "project_id": "barberease-68414",
+    "storage_bucket": "barberease-68414.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87826987902:android:3ded7fd6e8412cfc2e912f",
+        "android_client_info": {
+          "package_name": "com.example.barberease"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0iQkOCS7Wk6oo_iKUc6tSxvcUq_IyL2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
