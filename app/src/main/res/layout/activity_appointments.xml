@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFAE4"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/appointments_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Appointments"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:paddingBottom="16dp" />
+
+    <LinearLayout
+        android:id="@+id/appointments_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appointments_title"
+        android:orientation="vertical"
+        android:paddingTop="16dp">
+
+        <!-- Dummy appointments for illustration -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#CCCCCC"
+            android:layout_marginBottom="16dp"
+            />
+           // android:background="@drawable/rounded_corner" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#CCCCCC"
+            android:layout_marginBottom="16dp"
+            />
+           // android:background="@drawable/rounded_corner" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#CCCCCC"
+            android:layout_marginBottom="16dp"
+            />
+        //android:background="@drawable/rounded_corner" />
+    </LinearLayout>
+
+    <!-- Bottom navigation bar -->
+    <LinearLayout
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:padding="16dp"
+        android:elevation="2dp">
+
+        <ImageButton
+            android:id="@+id/nav_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_view"
+            android:background="@null"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/nav_appointments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_month"
+            android:background="@null"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/nav_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_more"
+            android:background="@null"
+            android:layout_weight="1" />
+    </LinearLayout>
+</RelativeLayout>

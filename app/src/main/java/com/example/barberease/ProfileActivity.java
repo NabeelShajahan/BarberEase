@@ -1,43 +1,42 @@
-
 package com.example.barberease;
 
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.view.View;
-        import android.widget.ImageButton;
-        import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_profile);
 
         ImageButton navHome = findViewById(R.id.nav_home);
         ImageButton navAppointments = findViewById(R.id.nav_appointments);
-        ImageButton navMenu = findViewById(R.id.nav_menu);
+        ImageButton navProfile = findViewById(R.id.nav_profile);
 
         navHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Home button action
+                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 
         navAppointments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AppointmentsActivity.class);
+                Intent intent = new Intent(ProfileActivity.this, AppointmentsActivity.class);
                 startActivity(intent);
             }
         });
 
-        navMenu.setOnClickListener(new View.OnClickListener() {
+        navProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
+                // Current activity, no action needed
             }
         });
     }
