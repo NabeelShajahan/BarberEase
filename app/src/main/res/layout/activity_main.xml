@@ -17,12 +17,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#CCCCCC"
+            android:background="@drawable/rounded_corner"
             android:padding="8dp"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            >
-         //   android:background="@drawable/rounded_corner">
+            android:gravity="center_vertical">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -68,10 +66,8 @@
         android:layout_height="150dp"
         android:layout_below="@id/ads_offers_title"
         android:layout_margin="16dp"
-        android:background="#CCCCCC"
-        android:layout_marginBottom="16dp"
-        />
-       // android:background="@drawable/rounded_corner" />
+        android:background="@drawable/rounded_corner"
+        android:layout_marginBottom="16dp" />
 
     <!-- Recommended shops section -->
     <TextView
@@ -100,26 +96,20 @@
             <View
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:background="#CCCCCC"
-                android:layout_marginEnd="15dp"
-                />
-             //   android:background="@drawable/rounded_corner" />
+                android:background="@drawable/rounded_corner"
+                android:layout_marginEnd="15dp" />
 
             <View
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:background="#CCCCCC"
-                android:layout_marginEnd="15dp"
-                />
-               // android:background="@drawable/rounded_corner" />
+                android:background="@drawable/rounded_corner"
+                android:layout_marginEnd="15dp" />
 
             <View
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:background="#CCCCCC"
-                android:layout_marginEnd="15dp"
-                />
-              //  android:background="@drawable/rounded_corner" />
+                android:background="@drawable/rounded_corner"
+                android:layout_marginEnd="15dp" />
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -129,7 +119,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/recommended_shops_title"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="16dp"
         android:paddingStart="16dp"
         android:text="Recommended Barbers"
         android:textSize="18sp"
@@ -150,38 +140,26 @@
             <View
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:background="#CCCCCC"
-                android:layout_marginEnd="15dp"
-                />
-            //    android:background="@drawable/rounded_circle" />
+                android:background="@drawable/rounded_circle"
+                android:layout_marginEnd="15dp" />
 
             <View
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:background="#CCCCCC"
-                android:layout_marginEnd="15dp"
-                />
-
-               // android:background="@drawable/rounded_circle" />
+                android:background="@drawable/rounded_circle"
+                android:layout_marginEnd="15dp" />
 
             <View
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:background="#CCCCCC"
-                android:layout_marginEnd="15dp"
-                />
-
-          //  android:background="@drawable/rounded_circle"
-
+                android:background="@drawable/rounded_circle"
+                android:layout_marginEnd="15dp" />
 
             <View
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:background="#CCCCCC"
-                android:layout_marginEnd="15dp"
-            />
-            //             android:background="@drawable/rounded_circle"
-
+                android:background="@drawable/rounded_circle"
+                android:layout_marginEnd="15dp" />
         </LinearLayout>
     </HorizontalScrollView>
 
