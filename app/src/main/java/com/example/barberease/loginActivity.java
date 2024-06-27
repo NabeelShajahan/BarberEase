@@ -1,31 +1,29 @@
 package com.example.barberease;
 
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.barberease.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
 public class loginActivity extends AppCompatActivity {
 
-    private static final String TAG = "LoginActivity";
-    private FirebaseAuth mAuth;
-
-    private EditText emailEditText;
-    private EditText passwordEditText;
+    private EditText emailEditText, passwordEditText;
     private Button loginButton;
-    private TextView registerText;
-    private TextView forgotPasswordText;
+    private ProgressBar progressBar;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +35,7 @@ public class loginActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
         loginButton = findViewById(R.id.login_button);
-        registerText = findViewById(R.id.register_new_user);
-        forgotPasswordText = findViewById(R.id.forgot_password);
+        progressBar = findViewById(R.id.progressBar);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,17 +44,21 @@ public class loginActivity extends AppCompatActivity {
             }
         });
 
-        registerText.setOnClickListener(new View.OnClickListener() {
+        TextView registerNewUser = findViewById(R.id.register_new_user);
+        registerNewUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(loginActivity.this, RegisterActivity.class));
+                Intent intent = new Intent(loginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
 
-        forgotPasswordText.setOnClickListener(new View.OnClickListener() {
+        TextView forgotPassword = findViewById(R.id.forgot_password);
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(loginActivity.this, ForgotPasswordActivity.class));
+                Intent intent = new Intent(loginActivity.this, ForgotPasswordActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -66,42 +67,43 @@ public class loginActivity extends AppCompatActivity {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
-        if (TextUtils.isEmpty(email)) {
-            emailEditText.setError("Email is required.");
+        if (email.isEmpty()) {
+            emailEditText.setError("Email is required");
+            emailEditText.requestFocus();
             return;
         }
 
-        if (TextUtils.isEmpty(password)) {
-            passwordEditText.setError("Password is required.");
+        if (password.isEmpty()) {
+            passwordEditText.setError("Password is required");
+            passwordEditText.requestFocus();
             return;
         }
 
-        // Show loading indicator
-        // progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
 
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    // Hide loading indicator
-                    // progressBar.setVisibility(View.GONE);
-
-                    if (task.isSuccessful()) {
-                        // Sign in success
-                        Log.d(TAG, "signInWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        updateUI(user);
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(loginActivity.this, "Invalid email or password.", Toast.LENGTH_SHORT).show();
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                progressBar.setVisibility(View.GONE);
+                if (task.isSuccessful()) {
+                    Toast.makeText(loginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(loginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    try {
+                        throw task.getException();
+                    } catch (FirebaseAuthInvalidUserException e) {
+                        emailEditText.setError("No account with this email");
+                        emailEditText.requestFocus();
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
+                        passwordEditText.setError("Incorrect password");
+                        passwordEditText.requestFocus();
+                    } catch (Exception e) {
+                        Toast.makeText(loginActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
+            }
+        });
     }
-
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            startActivity(new Intent(loginActivity.this, MainActivity.class));
-            finish();
-        }
-    }
-
 }
