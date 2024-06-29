@@ -1,6 +1,5 @@
 package com.example.barberease;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -100,7 +99,7 @@ public class loginActivity extends AppCompatActivity {
                         passwordEditText.setError("Incorrect password");
                         passwordEditText.requestFocus();
                     } catch (Exception e) {
-                        Toast.makeText(loginActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(loginActivity.this, "Authentication failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
