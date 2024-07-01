@@ -2,6 +2,7 @@ package com.example.barberease;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -66,13 +67,13 @@ public class loginActivity extends AppCompatActivity {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
-        if (email.isEmpty()) {
+        if (TextUtils.isEmpty(email)) {
             emailEditText.setError("Email is required");
             emailEditText.requestFocus();
             return;
         }
 
-        if (password.isEmpty()) {
+        if (TextUtils.isEmpty(password)) {
             passwordEditText.setError("Password is required");
             passwordEditText.requestFocus();
             return;
