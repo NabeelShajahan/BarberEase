@@ -3,6 +3,7 @@ package com.example.barberease;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private DatabaseReference databaseReference;
     private List<String> shopList, barberList;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +47,30 @@ public class MainActivity extends AppCompatActivity {
         noShopsTextView = findViewById(R.id.no_shops_text_view);
         noBarbersTextView = findViewById(R.id.no_barbers_text_view);
         progressBar = findViewById(R.id.progressBar);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         setupRecyclerViews();
         fetchDataFromDatabase();
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.nav_home) {
+                    // Stay in MainActivity
+                    return true;
+                } else if (itemId == R.id.nav_calendar) {
+                    Intent calendarIntent = new Intent(MainActivity.this, AppointmentsActivity.class);
+                    startActivity(calendarIntent);
+                    return true;
+                } else if (itemId == R.id.nav_list) {
+                    Intent listIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(listIntent);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
