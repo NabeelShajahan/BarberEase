@@ -1,201 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFAE4">
+    tools:context=".MainActivity">
 
-    <!-- Search bar and notification icon -->
-    <LinearLayout
-        android:id="@+id/search_bar_container"
+    <!-- Search Bar -->
+    <EditText
+        android:id="@+id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:layout_margin="16dp"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:hint="Search"
+        android:padding="10dp"
+        android:background="@drawable/search_bar_background" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_corner"
-            android:padding="8dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_search"
-                app:tint="#808080" />
-
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Search"
-                android:textColor="#808080"
-                android:background="@null"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp" />
-        </LinearLayout>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_notification_overlay"
-            android:background="@null"
-            android:layout_marginStart="16dp"
-            app:tint="#000000" />
-    </LinearLayout>
-
-    <!-- Ads and Offers section -->
+    <!-- Ads and Offers -->
     <TextView
         android:id="@+id/ads_offers_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/search_bar_container"
-        android:paddingStart="16dp"
-        android:paddingTop="16dp"
+        android:layout_below="@id/search_bar"
+        android:layout_margin="16dp"
         android:text="Ads and Offers"
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <View
-        android:id="@+id/ads_offers_banner"
+    <ImageView
+        android:id="@+id/ads_offers_image"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_below="@id/ads_offers_title"
-        android:layout_margin="16dp"
-        android:background="@drawable/rounded_corner"
-        android:layout_marginBottom="16dp" />
+        android:layout_margin="16dp" />
+ //       android:src="@drawable/ads_offers_image"
 
-    <!-- Recommended shops section -->
+    <!-- Recommended Shops -->
     <TextView
         android:id="@+id/recommended_shops_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ads_offers_banner"
-        android:paddingStart="16dp"
-        android:text="Recommended shops"
+        android:layout_below="@id/ads_offers_image"
+        android:layout_margin="16dp"
+        android:text="Recommended Shops"
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <HorizontalScrollView
+    <RecyclerView
+        android:id="@+id/recommended_shops_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_below="@id/recommended_shops_title"
-        android:padding="16dp"
-        android:scrollbars="none">
+        android:layout_margin="16dp"
+        android:orientation="horizontal" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-
-            <View
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:background="@drawable/rounded_corner"
-                android:layout_marginEnd="15dp" />
-
-            <View
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:background="@drawable/rounded_corner"
-                android:layout_marginEnd="15dp" />
-
-            <View
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:background="@drawable/rounded_corner"
-                android:layout_marginEnd="15dp" />
-        </LinearLayout>
-    </HorizontalScrollView>
-
-    <!-- Recommended barbers section -->
+    <!-- Recommended Barbers -->
     <TextView
         android:id="@+id/recommended_barbers_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/recommended_shops_title"
-        android:layout_marginTop="16dp"
-        android:paddingStart="16dp"
+        android:layout_below="@id/recommended_shops_recycler_view"
+        android:layout_margin="16dp"
         android:text="Recommended Barbers"
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <HorizontalScrollView
+    <RecyclerView
+        android:id="@+id/recommended_barbers_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_below="@id/recommended_barbers_title"
-        android:padding="16dp"
-        android:scrollbars="none">
+        android:layout_margin="16dp"
+        android:orientation="horizontal" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="@drawable/rounded_circle"
-                android:layout_marginEnd="15dp" />
-
-            <View
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="@drawable/rounded_circle"
-                android:layout_marginEnd="15dp" />
-
-            <View
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="@drawable/rounded_circle"
-                android:layout_marginEnd="15dp" />
-
-            <View
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="@drawable/rounded_circle"
-                android:layout_marginEnd="15dp" />
-        </LinearLayout>
-    </HorizontalScrollView>
-
-    <!-- Bottom navigation bar -->
-    <LinearLayout
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:background="#FFFFFF"
-        android:padding="16dp"
-        android:elevation="2dp">
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
-        <ImageButton
-            android:id="@+id/nav_home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_view"
-            android:background="@null"
-            android:layout_weight="1" />
-
-        <ImageButton
-            android:id="@+id/nav_appointments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_month"
-            android:background="@null"
-            android:layout_weight="1" />
-
-        <ImageButton
-            android:id="@+id/nav_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_more"
-            android:background="@null"
-            android:layout_weight="1" />
-    </LinearLayout>
 </RelativeLayout>

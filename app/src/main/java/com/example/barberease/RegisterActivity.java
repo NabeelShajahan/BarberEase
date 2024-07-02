@@ -3,6 +3,7 @@ package com.example.barberease;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,8 +57,20 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.setError("Enter a valid email.");
+            emailEditText.requestFocus();
+            return;
+        }
+
         if (TextUtils.isEmpty(password)) {
             passwordEditText.setError("Password is required.");
+            passwordEditText.requestFocus();
+            return;
+        }
+
+        if (password.length() < 6) {
+            passwordEditText.setError("Password should be at least 6 characters.");
             passwordEditText.requestFocus();
             return;
         }
@@ -80,6 +93,12 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        if (!isValidPhoneNumber(phone)) {
+            phoneEditText.setError("Enter a valid phone number.");
+            phoneEditText.requestFocus();
+            return;
+        }
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -89,6 +108,10 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private boolean isValidPhoneNumber(String phone) {
+        return phone.length() == 10 && phone.matches("[0-9]+");
     }
 
     private void updateUI(FirebaseUser user, String fullName, String phone) {
