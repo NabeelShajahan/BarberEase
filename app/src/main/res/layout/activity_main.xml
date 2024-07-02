@@ -32,8 +32,8 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_below="@id/ads_offers_title"
-        android:layout_margin="16dp" />
- //       android:src="@drawable/ads_offers_image"
+        android:layout_margin="16dp"  />
+     //   android:src="@drawable/ads_offers_image"
 
     <!-- Recommended Shops -->
     <TextView
@@ -46,13 +46,23 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recommended_shops_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_below="@id/recommended_shops_title"
         android:layout_margin="16dp"
         android:orientation="horizontal" />
+
+    <TextView
+        android:id="@+id/no_shops_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No shops found"
+        android:textSize="18sp"
+        android:visibility="gone"
+        android:layout_below="@id/recommended_shops_title"
+        android:textAlignment="center" />
 
     <!-- Recommended Barbers -->
     <TextView
@@ -65,13 +75,23 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recommended_barbers_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_below="@id/recommended_barbers_title"
         android:layout_margin="16dp"
         android:orientation="horizontal" />
+
+    <TextView
+        android:id="@+id/no_barbers_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No barbers found"
+        android:textSize="18sp"
+        android:visibility="gone"
+        android:layout_below="@id/recommended_barbers_title"
+        android:textAlignment="center" />
 
     <!-- Progress Bar -->
     <ProgressBar

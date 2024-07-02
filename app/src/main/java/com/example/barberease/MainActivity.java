@@ -2,8 +2,10 @@ package com.example.barberease;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,8 +23,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private FirebaseAuth mAuth;
     private RecyclerView recommendedShopsRecyclerView, recommendedBarbersRecyclerView;
+    private TextView noShopsTextView, noBarbersTextView;
     private ProgressBar progressBar;
     private DatabaseReference databaseReference;
     private List<String> shopList, barberList;
@@ -37,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         recommendedShopsRecyclerView = findViewById(R.id.recommended_shops_recycler_view);
         recommendedBarbersRecyclerView = findViewById(R.id.recommended_barbers_recycler_view);
+        noShopsTextView = findViewById(R.id.no_shops_text_view);
+        noBarbersTextView = findViewById(R.id.no_barbers_text_view);
         progressBar = findViewById(R.id.progressBar);
 
         setupRecyclerViews();
@@ -48,9 +54,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
+            Log.d(TAG, "No current user, redirecting to LoginActivity");
             Intent intent = new Intent(MainActivity.this, loginActivity.class);
             startActivity(intent);
             finish();
+        } else {
+            Log.d(TAG, "Current user: " + currentUser.getEmail());
         }
     }
 
@@ -70,8 +79,13 @@ public class MainActivity extends AppCompatActivity {
                     String shop = dataSnapshot.getValue(String.class);
                     shopList.add(shop);
                 }
-                RecyclerView.Adapter adapter = new ImageAdapter(shopList, MainActivity.this);
-                recommendedShopsRecyclerView.setAdapter(adapter);
+                if (shopList.isEmpty()) {
+                    noShopsTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noShopsTextView.setVisibility(View.GONE);
+                    RecyclerView.Adapter adapter = new ImageAdapter(shopList, MainActivity.this);
+                    recommendedShopsRecyclerView.setAdapter(adapter);
+                }
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -90,8 +104,13 @@ public class MainActivity extends AppCompatActivity {
                     String barber = dataSnapshot.getValue(String.class);
                     barberList.add(barber);
                 }
-                RecyclerView.Adapter adapter = new ImageAdapter(barberList, MainActivity.this);
-                recommendedBarbersRecyclerView.setAdapter(adapter);
+                if (barberList.isEmpty()) {
+                    noBarbersTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noBarbersTextView.setVisibility(View.GONE);
+                    RecyclerView.Adapter adapter = new ImageAdapter(barberList, MainActivity.this);
+                    recommendedBarbersRecyclerView.setAdapter(adapter);
+                }
                 progressBar.setVisibility(View.GONE);
             }
 
