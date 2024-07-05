@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,8 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private EditText profileNameEditText, profileEmailEditText, profilePhoneEditText;
-    private Button changePictureButton, updateProfileButton, helpSupportButton, logoutButton;
+    private TextView profileNameTextView, profileEmailTextView;
+    private ImageView profileImageView;
+    private Button notificationsButton, helpSupportButton, logoutButton, paymentsButton, subscriptionsButton, businessAccountButton;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private BottomNavigationView bottomNavigationView;
@@ -34,33 +38,51 @@ public class ProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
 
-        profileNameEditText = findViewById(R.id.profile_name);
-        profileEmailEditText = findViewById(R.id.profile_email);
-        profilePhoneEditText = findViewById(R.id.profile_phone);
-        changePictureButton = findViewById(R.id.change_picture_button);
-        updateProfileButton = findViewById(R.id.update_profile_button);
+        profileNameTextView = findViewById(R.id.profile_name);
+        profileEmailTextView = findViewById(R.id.profile_email);
+        profileImageView = findViewById(R.id.profile_image);
+        notificationsButton = findViewById(R.id.notifications_button);
         helpSupportButton = findViewById(R.id.help_support_button);
         logoutButton = findViewById(R.id.logout_button);
+        paymentsButton = findViewById(R.id.paymentsandsubscription_button);
+        businessAccountButton = findViewById(R.id.business_account_button);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            profileEmailEditText.setText(user.getEmail());
-            // Load other profile data like name and phone if available
+            profileEmailTextView.setText(user.getEmail());
+            // Load other profile data like name if available
             loadUserProfile(user.getUid());
         }
 
-        changePictureButton.setOnClickListener(new View.OnClickListener() {
+        profileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle change picture logic
+                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+                startActivity(intent);
             }
         });
 
-        updateProfileButton.setOnClickListener(new View.OnClickListener() {
+        profileNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateProfile(user.getUid());
+                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        profileEmailTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        notificationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle notifications logic
             }
         });
 
@@ -68,6 +90,23 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Handle help and support logic
+            }
+        });
+
+        paymentsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, SubscriptionsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        businessAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, BusinessAccountActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -108,9 +147,7 @@ public class ProfileActivity extends AppCompatActivity {
                 DataSnapshot snapshot = task.getResult();
                 if (snapshot.exists()) {
                     String name = snapshot.child("fullName").getValue(String.class);
-                    String phone = snapshot.child("phone").getValue(String.class);
-                    profileNameEditText.setText(name);
-                    profilePhoneEditText.setText(phone);
+                    profileNameTextView.setText(name);
                 } else {
                     Toast.makeText(ProfileActivity.this, "Profile not found", Toast.LENGTH_SHORT).show();
                 }
@@ -118,29 +155,5 @@ public class ProfileActivity extends AppCompatActivity {
                 Toast.makeText(ProfileActivity.this, "Failed to load profile", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void updateProfile(String userId) {
-        String name = profileNameEditText.getText().toString().trim();
-        String email = profileEmailEditText.getText().toString().trim();
-        String phone = profilePhoneEditText.getText().toString().trim();
-
-        if (name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
-            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            user.updateEmail(email).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    databaseReference.child(userId).child("fullName").setValue(name);
-                    databaseReference.child(userId).child("phone").setValue(phone);
-                    Toast.makeText(ProfileActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ProfileActivity.this, "Failed to update email", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
     }
 }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/background_color"
+    tools:context=".EditProfileActivity">
+
+    <TextView
+        android:id="@+id/edit_profile_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Profile"
+        android:textSize="24sp"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp" />
+
+    <EditText
+        android:id="@+id/edit_profile_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        android:layout_below="@id/edit_profile_title"
+        android:layout_marginTop="16dp"
+        android:padding="12dp"
+        android:background="@drawable/layout" />
+
+    <EditText
+        android:id="@+id/edit_profile_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:layout_below="@id/edit_profile_name"
+        android:layout_marginTop="16dp"
+        android:padding="12dp"
+        android:background="@drawable/layout"
+        android:enabled="false" />
+
+    <EditText
+        android:id="@+id/edit_profile_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone"
+        android:inputType="phone"
+        android:layout_below="@id/edit_profile_email"
+        android:layout_marginTop="16dp"
+        android:padding="12dp"
+        android:background="@drawable/layout" />
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_below="@id/edit_profile_phone"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:padding="12dp" />
+
+</RelativeLayout>
