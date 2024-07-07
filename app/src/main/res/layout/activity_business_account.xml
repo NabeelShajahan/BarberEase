@@ -1,9 +1,144 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<!-- res/layout/activity_business_account.xml -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BusinessAccountActivity">
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Register as a Barber"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/barber_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your name"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Services Offered"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <CheckBox
+                android:id="@+id/service_haircut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Haircut"/>
+
+            <CheckBox
+                android:id="@+id/service_shave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shave"/>
+
+            <CheckBox
+                android:id="@+id/service_coloring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Coloring"/>
+
+            <CheckBox
+                android:id="@+id/service_styling"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Styling"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Details"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/barber_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your details"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Price"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/barber_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your price"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Schedule"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/barber_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your schedule"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload Posts"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/upload_posts_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload Posts"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Payments"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/barber_payments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your payment details"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+</ScrollView>
