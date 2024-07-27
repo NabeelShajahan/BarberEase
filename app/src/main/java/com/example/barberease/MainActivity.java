@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                     noShopsTextView.setVisibility(View.VISIBLE);
                 } else {
                     noShopsTextView.setVisibility(View.GONE);
-                    RecyclerView.Adapter adapter = new ImageAdapter(shopList, MainActivity.this);
+                    ImageAdapter adapter = new ImageAdapter((List<Object>)(List<?>)shopList, MainActivity.this);
                     recommendedShopsRecyclerView.setAdapter(adapter);
                 }
                 progressBar.setVisibility(View.GONE);
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     noBarbersTextView.setVisibility(View.VISIBLE);
                 } else {
                     noBarbersTextView.setVisibility(View.GONE);
-                    RecyclerView.Adapter adapter = new ImageAdapter(barberList, MainActivity.this);
+                    ImageAdapter adapter = new ImageAdapter((List<Object>)(List<?>)barberList, MainActivity.this);
                     recommendedBarbersRecyclerView.setAdapter(adapter);
                 }
                 progressBar.setVisibility(View.GONE);
