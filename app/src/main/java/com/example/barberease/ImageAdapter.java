@@ -13,10 +13,10 @@ import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
-    private List<String> imageList;
+    private List<Object> imageList;
     private Context context;
 
-    public ImageAdapter(List<String> imageList, Context context) {
+    public ImageAdapter(List<Object> imageList, Context context) {
         this.imageList = imageList;
         this.context = context;
     }
@@ -30,8 +30,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        String imageUrl = imageList.get(position);
-        Glide.with(context).load(imageUrl).into(holder.imageView);
+        Object item = imageList.get(position);
+        String imageUrl = null;
+
     }
 
     @Override
@@ -39,22 +40,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         return imageList.size();
     }
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ImageViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image_view);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION) {
-                Toast.makeText(context, "Clicked on item " + position, Toast.LENGTH_SHORT).show();
-                // Implement further action such as opening a detail activity
-            }
         }
     }
 }
