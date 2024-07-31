@@ -31,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView noShopsTextView, noBarbersTextView;
     private ProgressBar progressBar;
     private DatabaseReference databaseReference;
-    private List<String> shopList, barberList;
+    private List<BarberShop> shopList;
+    private List<Barber> barberList;
+
     private BottomNavigationView bottomNavigationView;
 
     @Override
@@ -100,15 +102,15 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 shopList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String shop = dataSnapshot.getValue(String.class);
+                    BarberShop shop= dataSnapshot.getValue(BarberShop.class);
                     shopList.add(shop);
                 }
                 if (shopList.isEmpty()) {
                     noShopsTextView.setVisibility(View.VISIBLE);
                 } else {
                     noShopsTextView.setVisibility(View.GONE);
-                    ImageAdapter adapter = new ImageAdapter((List<Object>)(List<?>)shopList, MainActivity.this);
-                    recommendedShopsRecyclerView.setAdapter(adapter);
+                    ImageAdapter shopAdapter = new ImageAdapter((List<Object>)(List<?>)shopList, MainActivity.this);
+                    recommendedShopsRecyclerView.setAdapter(shopAdapter);
                 }
                 progressBar.setVisibility(View.GONE);
             }
@@ -125,15 +127,15 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 barberList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String barber = dataSnapshot.getValue(String.class);
+                    Barber barber = dataSnapshot.getValue(Barber.class);
                     barberList.add(barber);
                 }
                 if (barberList.isEmpty()) {
                     noBarbersTextView.setVisibility(View.VISIBLE);
                 } else {
                     noBarbersTextView.setVisibility(View.GONE);
-                    ImageAdapter adapter = new ImageAdapter((List<Object>)(List<?>)barberList, MainActivity.this);
-                    recommendedBarbersRecyclerView.setAdapter(adapter);
+                    ImageAdapter barberAdapter = new ImageAdapter((List<Object>)(List<?>)barberList, MainActivity.this);
+                    recommendedBarbersRecyclerView.setAdapter(barberAdapter);
                 }
                 progressBar.setVisibility(View.GONE);
             }

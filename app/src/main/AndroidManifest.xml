@@ -45,6 +45,12 @@
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".Barber">
+
+        </activity>
+
         <activity
             android:name=".loginActivity"
             android:exported="false" />

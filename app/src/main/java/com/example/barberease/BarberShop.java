@@ -3,7 +3,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class BarberShop implements Parcelable{
-    public String imageUrl;
+    private String imageUrl;
 
     public BarberShop(String imageUrl) {
         this.imageUrl = imageUrl;
@@ -14,6 +14,14 @@ public class BarberShop implements Parcelable{
     protected BarberShop(Parcel in) {
         imageUrl = in.readString();
     }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
 
 
     public static final Creator<BarberShop> CREATOR = new Creator<BarberShop>() {
