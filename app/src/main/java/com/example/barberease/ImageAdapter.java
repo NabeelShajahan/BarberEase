@@ -38,7 +38,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             Barber barber = (Barber) item;
             imageUrl = barber.getImageUrl();
             holder.itemView.setOnClickListener(v -> {
-                Intent intent = new Intent(context, Barber.class);
+                Intent intent = new Intent(context,BarberDetailsActivity.class);
                 intent.putExtra("barber", barber);
                 context.startActivity(intent);
             });
