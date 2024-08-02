@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     noBarbersTextView.setVisibility(View.VISIBLE);
                 } else {
                     noBarbersTextView.setVisibility(View.GONE);
-                    ImageAdapter barberAdapter = new ImageAdapter((List<Object>)(List<?>)barberList, MainActivity.this);
+                    BarberAdapter barberAdapter = new BarberAdapter(barberList, MainActivity.this);
                     recommendedBarbersRecyclerView.setAdapter(barberAdapter);
                 }
                 progressBar.setVisibility(View.GONE);

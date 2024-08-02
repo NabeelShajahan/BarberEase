@@ -1,6 +1,8 @@
 package com.example.barberease;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,16 @@ public class BarberAdapter extends RecyclerView.Adapter<BarberAdapter.BarberView
         Barber barber = barberList.get(position);
         holder.nameTextView.setText(barber.getName());
         holder.detailsTextView.setText(barber.getDetails());
+        holder.itemView.setOnClickListener(v -> {
+            String barberId = barber.getUserId();
+            if (barberId != null) {
+                Intent intent = new Intent(context, BarberDetailsActivity.class);
+                intent.putExtra("barberId", barberId);
+                context.startActivity(intent);
+            } else {
+                Log.e("BarberAdapter", "barberId is null");
+            }
+        });
     }
 
     @Override
