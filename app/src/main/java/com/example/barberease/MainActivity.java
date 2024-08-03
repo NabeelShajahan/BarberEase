@@ -102,14 +102,14 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 shopList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    BarberShop shop= dataSnapshot.getValue(BarberShop.class);
+                    BarberShop shop = dataSnapshot.getValue(BarberShop.class);
                     shopList.add(shop);
                 }
                 if (shopList.isEmpty()) {
                     noShopsTextView.setVisibility(View.VISIBLE);
                 } else {
                     noShopsTextView.setVisibility(View.GONE);
-                    ImageAdapter shopAdapter = new ImageAdapter((List<Object>)(List<?>)shopList, MainActivity.this);
+                    ImageAdapter shopAdapter = new ImageAdapter((List<Object>)(List<?>) shopList, MainActivity.this);
                     recommendedShopsRecyclerView.setAdapter(shopAdapter);
                 }
                 progressBar.setVisibility(View.GONE);
@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 barberList = new ArrayList<>();
+                barberList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Barber barber = dataSnapshot.getValue(Barber.class);
                     barberList.add(barber);
@@ -147,4 +148,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }
