@@ -7,16 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
 public class BarberAdapter extends RecyclerView.Adapter<BarberAdapter.BarberViewHolder> {
 
     private List<Barber> barberList;
     private Context context;
+    private static final String TAG = "BarberAdapter";
 
     public BarberAdapter(List<Barber> barberList, Context context) {
         this.barberList = barberList;
@@ -42,14 +41,17 @@ public class BarberAdapter extends RecyclerView.Adapter<BarberAdapter.BarberView
                 intent.putExtra("barberId", barberId);
                 context.startActivity(intent);
             } else {
-                Log.e("BarberAdapter", "barberId is null");
+                Log.e(TAG, "barberId is null");
             }
         });
+        Log.d(TAG, "Binding barber: " + barber.getName());
     }
 
     @Override
     public int getItemCount() {
-        return barberList.size();
+        int itemCount = barberList.size();
+        Log.d(TAG, "Item count: " + itemCount);
+        return itemCount;
     }
 
     public static class BarberViewHolder extends RecyclerView.ViewHolder {

@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_home) {
-                    // Stay in MainActivity
                     return true;
                 } else if (itemId == R.id.nav_calendar) {
                     Intent calendarIntent = new Intent(MainActivity.this, AppointmentsActivity.class);
@@ -111,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                     noShopsTextView.setVisibility(View.GONE);
                     ImageAdapter shopAdapter = new ImageAdapter((List<Object>)(List<?>) shopList, MainActivity.this);
                     recommendedShopsRecyclerView.setAdapter(shopAdapter);
+                    shopAdapter.notifyDataSetChanged();
                 }
                 progressBar.setVisibility(View.GONE);
             }
@@ -126,17 +126,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 barberList = new ArrayList<>();
-                barberList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Barber barber = dataSnapshot.getValue(Barber.class);
                     barberList.add(barber);
+                    Log.d(TAG, "Barber added: " + barber.getName());
                 }
+                Log.d(TAG, "Total barbers fetched: " + barberList.size());
                 if (barberList.isEmpty()) {
                     noBarbersTextView.setVisibility(View.VISIBLE);
                 } else {
                     noBarbersTextView.setVisibility(View.GONE);
                     BarberAdapter barberAdapter = new BarberAdapter(barberList, MainActivity.this);
                     recommendedBarbersRecyclerView.setAdapter(barberAdapter);
+                    barberAdapter.notifyDataSetChanged();
+                    Log.d(TAG, "Adapter set with item count: " + barberAdapter.getItemCount());
                 }
                 progressBar.setVisibility(View.GONE);
             }
@@ -148,5 +151,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 }
