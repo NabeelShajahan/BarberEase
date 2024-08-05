@@ -16,6 +16,9 @@
         android:theme="@style/Theme.BarberEase"
         tools:targetApi="31">
         <activity
+            android:name=".ReviewsFragment"
+            android:exported="false" />
+        <activity
             android:name=".HomeFragment"
             android:exported="false" />
         <activity
