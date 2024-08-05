@@ -19,8 +19,9 @@
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:background="@drawable/circle_background"
-            android:src="@drawable/ic_profile_placeholder" />
+            android:background="@drawable/ic_profile"
+          />
+        //  android:src="@drawable/ic_profile_placeholder" />
 
         <TextView
             android:id="@+id/profile_name"
@@ -44,7 +45,8 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:paddingLeft="32dp"
-        android:paddingRight="32dp">
+        android:paddingRight="32dp"
+        tools:ignore="NotSibling">
 
         <TextView
             android:id="@+id/tab_info"
@@ -137,7 +139,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/profile_name"
-        android:padding="16dp" />
+        android:padding="16dp"
+        tools:ignore="NotSibling" />
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
