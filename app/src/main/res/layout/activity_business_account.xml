@@ -19,9 +19,8 @@
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:background="@drawable/ic_profile"
-          />
-        //  android:src="@drawable/ic_profile_placeholder" />
+            android:background="@drawable/circle_background"
+            android:src="@drawable/ic_profile_placeholder" />
 
         <TextView
             android:id="@+id/profile_name"
@@ -45,15 +44,14 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        tools:ignore="NotSibling">
+        android:paddingRight="32dp">
 
         <TextView
-            android:id="@+id/tab_info"
+            android:id="@+id/tab_home"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="INFO"
+            android:text="HOME"
             android:textColor="#FFD700"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -89,48 +87,6 @@
             android:padding="8dp"
             android:background="?attr/selectableItemBackground"
             android:clickable="true" />
-
-        <TextView
-            android:id="@+id/tab_address"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="ADDRESS & HOURS"
-            android:textColor="#AAAAAA"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:padding="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true" />
-
-        <TextView
-            android:id="@+id/tab_photos"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="PHOTOS"
-            android:textColor="#AAAAAA"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:padding="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true" />
-
-        <TextView
-            android:id="@+id/tab_profile_picture"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="PROFILE PICTURE"
-            android:textColor="#AAAAAA"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:padding="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true" />
     </LinearLayout>
 
     <!-- Content Frame -->
@@ -139,8 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/profile_name"
-        android:padding="16dp"
-        tools:ignore="NotSibling" />
+        android:padding="16dp" />
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

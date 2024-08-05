@@ -24,7 +24,7 @@ import com.google.firebase.storage.StorageReference;
 public class BusinessAccountActivity extends AppCompatActivity {
 
     private ImageView profileImage;
-    private TextView profileName, tabInfo, tabReviews, tabServices, tabAddress, tabPhotos, tabProfilePicture;
+    private TextView profileName, tabHome, tabReviews, tabServices;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
@@ -37,12 +37,9 @@ public class BusinessAccountActivity extends AppCompatActivity {
 
         profileImage = findViewById(R.id.profile_image);
         profileName = findViewById(R.id.profile_name);
-        tabInfo = findViewById(R.id.tab_info);
+        tabHome = findViewById(R.id.tab_home);
         tabReviews = findViewById(R.id.tab_reviews);
         tabServices = findViewById(R.id.tab_services);
-        tabAddress = findViewById(R.id.tab_address);
-        tabPhotos = findViewById(R.id.tab_photos);
-        tabProfilePicture = findViewById(R.id.tab_profile_picture);
 
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("barbers");
@@ -52,11 +49,11 @@ public class BusinessAccountActivity extends AppCompatActivity {
 
         loadBarberProfile();
 
-        tabInfo.setOnClickListener(new View.OnClickListener() {
+        tabHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new InfoFragment());
-                updateTabSelection(tabInfo);
+                loadFragment(new HomeFragment());
+                updateTabSelection(tabHome);
             }
         });
 
@@ -73,27 +70,6 @@ public class BusinessAccountActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loadFragment(new ServicesFragment());
                 updateTabSelection(tabServices);
-            }
-        });
-
-        tabAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(BusinessAccountActivity.this, AddressActivity.class));
-            }
-        });
-
-        tabPhotos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(BusinessAccountActivity.this, PhotosActivity.class));
-            }
-        });
-
-        tabProfilePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(BusinessAccountActivity.this, ProfilePictureActivity.class));
             }
         });
 
@@ -130,12 +106,9 @@ public class BusinessAccountActivity extends AppCompatActivity {
     }
 
     private void updateTabSelection(TextView selectedTab) {
-        tabInfo.setTextColor(getResources().getColor(selectedTab == tabInfo ? R.color.gold : R.color.gray));
+        tabHome.setTextColor(getResources().getColor(selectedTab == tabHome ? R.color.gold : R.color.gray));
         tabReviews.setTextColor(getResources().getColor(selectedTab == tabReviews ? R.color.gold : R.color.gray));
         tabServices.setTextColor(getResources().getColor(selectedTab == tabServices ? R.color.gold : R.color.gray));
-        tabAddress.setTextColor(getResources().getColor(selectedTab == tabAddress ? R.color.gold : R.color.gray));
-        tabPhotos.setTextColor(getResources().getColor(selectedTab == tabPhotos ? R.color.gold : R.color.gray));
-        tabProfilePicture.setTextColor(getResources().getColor(selectedTab == tabProfilePicture ? R.color.gold : R.color.gray));
     }
 
     private void loadBarberProfile() {
