@@ -16,6 +16,9 @@
         android:theme="@style/Theme.BarberEase"
         tools:targetApi="31">
         <activity
+            android:name=".AddressActivity"
+            android:exported="false" />
+        <activity
             android:name=".BarberDetailsActivity"
             android:exported="false" />
         <activity
@@ -48,7 +51,7 @@
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
-        <activity android:name=".Barber"></activity>
+        <activity android:name=".Barber" />
         <activity
             android:name=".loginActivity"
             android:exported="false" />
