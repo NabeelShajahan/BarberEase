@@ -5,34 +5,12 @@
     android:background="#000000"
     tools:context=".HomeFragment">
 
-    <!-- Profile Image and Info -->
-    <ImageView
-        android:id="@+id/profile_image"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_profile" />
-
-    <TextView
-        android:id="@+id/profile_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/profile_image"
-        android:layout_marginTop="8dp"
-        android:layout_centerHorizontal="true"
-        android:textColor="#FFFFFF"
-        android:text="User Name"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
     <!-- Address and Hours, Info, Photos, Profile Picture Links -->
     <TextView
         android:id="@+id/address_and_hours"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/profile_name"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
         android:textColor="#FFD700"
         android:text="Address &amp; Hours"
