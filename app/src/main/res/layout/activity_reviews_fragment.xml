@@ -15,6 +15,18 @@
         android:textSize="16sp"
         android:layout_marginBottom="8dp" />
 
+    <TextView
+        android:id="@+id/no_reviews_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="You have no reviews yet\nClients can review your service once they have completed an appointment with you."
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:layout_marginTop="20dp"
+        android:gravity="center" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reviews_recycler_view"
         android:layout_width="match_parent"

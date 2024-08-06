@@ -27,6 +27,7 @@ public class ReviewsFragment extends Fragment {
     private List<Review> reviewList;
     private DatabaseReference databaseReference;
     private String barberId;
+    private TextView noReviewsTextView;
 
     @Nullable
     @Override
@@ -35,6 +36,7 @@ public class ReviewsFragment extends Fragment {
         reviewsRecyclerView = view.findViewById(R.id.reviews_recycler_view);
         reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        noReviewsTextView = view.findViewById(R.id.no_reviews_text_view);
         reviewList = new ArrayList<>();
         reviewsAdapter = new ReviewsAdapter(reviewList);
         reviewsRecyclerView.setAdapter(reviewsAdapter);
@@ -52,11 +54,14 @@ public class ReviewsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 reviewList.clear();
-                for (DataSnapshot reviewSnapshot : snapshot.getChildren()) {
-                    Review review = reviewSnapshot.getValue(Review.class);
-                    reviewList.add(review);
+                if (snapshot.exists()) {
+                    for (DataSnapshot reviewSnapshot : snapshot.getChildren()) {
+                        Review review = reviewSnapshot.getValue(Review.class);
+                        reviewList.add(review);
+                    }
                 }
                 reviewsAdapter.notifyDataSetChanged();
+                updateNoReviewsMessage();
             }
 
             @Override
@@ -64,5 +69,15 @@ public class ReviewsFragment extends Fragment {
                 // Handle possible errors
             }
         });
+    }
+
+    private void updateNoReviewsMessage() {
+        if (reviewList.isEmpty()) {
+            noReviewsTextView.setVisibility(View.VISIBLE);
+            reviewsRecyclerView.setVisibility(View.GONE);
+        } else {
+            noReviewsTextView.setVisibility(View.GONE);
+            reviewsRecyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }
