@@ -1,6 +1,6 @@
 package com.example.barberease;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,29 +20,24 @@ import com.google.firebase.database.ValueEventListener;
 
 public class HomeFragment extends Fragment {
 
-    private TextView todaySchedule, completedAppts, estimatedRevenue, hoursBooked, chairUtilization;
+    private TextView todaySchedule, completedAppts, estimatedRevenue, hoursBooked, chairUtilization, profileName;
     private ImageView profileImage;
-    private TextView addressAndHours, info, photos, profilePicture;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private String barberId;
 
+    @SuppressLint("MissingInflatedId")
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_home_fragment, container, false);
-
         todaySchedule = view.findViewById(R.id.today_schedule);
         completedAppts = view.findViewById(R.id.completed_appts);
         estimatedRevenue = view.findViewById(R.id.estimated_revenue);
         hoursBooked = view.findViewById(R.id.hours_booked);
         chairUtilization = view.findViewById(R.id.chair_utilization);
-
         profileImage = view.findViewById(R.id.profile_image);
-        addressAndHours = view.findViewById(R.id.address_and_hours);
-        info = view.findViewById(R.id.info);
-        photos = view.findViewById(R.id.photos);
-        profilePicture = view.findViewById(R.id.profile_picture);
+        profileName = view.findViewById(R.id.profile_name);
 
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("barbers");
@@ -49,67 +45,41 @@ public class HomeFragment extends Fragment {
         barberId = mAuth.getCurrentUser().getUid();
 
         loadHomeData();
-        setupProfileActions();
 
         return view;
     }
 
     private void loadHomeData() {
-        databaseReference.child(barberId).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(barberId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    // Example data structure
-                    String schedule = snapshot.child("schedule").getValue(String.class);
-                    int completedAppointments = snapshot.child("completedAppointments").getValue(Integer.class);
-                    double revenue = snapshot.child("estimatedRevenue").getValue(Double.class);
-                    int bookedHours = snapshot.child("hoursBooked").getValue(Integer.class);
-                    double utilization = snapshot.child("chairUtilization").getValue(Double.class);
-
+                    String name = snapshot.child("name").getValue(String.class);
                     String imageUrl = snapshot.child("imageUrl").getValue(String.class);
+                    String schedule = snapshot.child("schedule").getValue(String.class);
+                    Integer completedAppointments = snapshot.child("completedAppointments").getValue(Integer.class);
+                    Double revenue = snapshot.child("estimatedRevenue").getValue(Double.class);
+                    Integer bookedHours = snapshot.child("hoursBooked").getValue(Integer.class);
+                    Double utilization = snapshot.child("chairUtilization").getValue(Double.class);
 
-                    todaySchedule.setText(schedule);
-                    completedAppts.setText(String.valueOf(completedAppointments));
-                    estimatedRevenue.setText(String.valueOf(revenue));
-                    hoursBooked.setText(String.valueOf(bookedHours));
-                    chairUtilization.setText(String.valueOf(utilization));
-
+                    profileName.setText(name != null ? name : "User Name");
                     if (imageUrl != null && !imageUrl.isEmpty()) {
-                        Glide.with(getActivity()).load(imageUrl).into(profileImage);
+                        Glide.with(HomeFragment.this).load(imageUrl).into(profileImage);
                     } else {
-                        profileImage.setImageResource(R.drawable.testusericon);
+                        profileImage.setImageResource(R.drawable.ic_profile);
                     }
+
+                    todaySchedule.setText("Today's Schedule: " + (schedule != null ? schedule : "0"));
+                    completedAppts.setText("Completed Appointments: " + (completedAppointments != null ? completedAppointments : "0"));
+                    estimatedRevenue.setText("Estimated Revenue: " + (revenue != null ? revenue : "0"));
+                    hoursBooked.setText("Hours Booked: " + (bookedHours != null ? bookedHours : "0"));
+                    chairUtilization.setText("Chair Utilization: " + (utilization != null ? utilization : "0"));
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Handle possible errors
-            }
-        });
-    }
-
-    private void setupProfileActions() {
-        addressAndHours.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), AddressActivity.class));
-            }
-        });
-
-
-
-        photos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), PhotosActivity.class));
-            }
-        });
-
-        profilePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ProfilePictureActivity.class));
             }
         });
     }
