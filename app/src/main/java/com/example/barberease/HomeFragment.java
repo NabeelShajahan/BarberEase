@@ -97,12 +97,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), InfoActivity.class));
-            }
-        });
+
 
         photos.setOnClickListener(new View.OnClickListener() {
             @Override
