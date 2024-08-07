@@ -29,7 +29,31 @@ public class AddDataActivity extends AppCompatActivity {
 
     private void addBarbersData() {
         DatabaseReference barbersRef = mDatabase.child("barbers");
-        barbersRef.child("barber1").setValue(new BarberShop("https://example.com/barber1.jpg"));
-        barbersRef.child("barber2").setValue(new BarberShop("https://example.com/barber2.jpg"));
+        barbersRef.child("barber1").setValue(new Barber(
+                "barber1Id",
+                "https://example.com/barber1.jpg",
+                "Barber One",
+                "Details about Barber One",
+                "$20",
+                "9 AM - 5 PM",
+                "PayPal",
+                true,
+                true,
+                false,
+                true
+        ));
+        barbersRef.child("barber2").setValue(new Barber(
+                "barber2Id",
+                "https://example.com/barber2.jpg",
+                "Barber Two",
+                "Details about Barber Two",
+                "$25",
+                "10 AM - 6 PM",
+                "Stripe",
+                true,
+                false,
+                true,
+                false
+        ));
     }
 }
