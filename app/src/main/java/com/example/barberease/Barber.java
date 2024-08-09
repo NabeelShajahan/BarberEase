@@ -1,12 +1,10 @@
 package com.example.barberease;
-import android.os.Parcel;
-import android.os.Parcelable;
 
-
-public class Barber implements Parcelable{
+public class Barber {
     private String userId;
     private String imageUrl;
     private String name;
+    private String phone;
     private String details;
     private String price;
     private String schedule;
@@ -15,15 +13,24 @@ public class Barber implements Parcelable{
     private boolean shave;
     private boolean coloring;
     private boolean styling;
+    private String locationType;
+    private String barbershopName;
+    private String streetAddress;
+    private String buildingFloor;
+    private String city;
+    private String stateRegion;
+    private String zipCode;
+    private String country;
 
     public Barber() {
         // Default constructor required for calls to DataSnapshot.getValue(Barber.class)
     }
 
-    public Barber(String userId, String imageUrl, String name, String details, String price, String schedule, String payments, boolean haircut, boolean shave, boolean coloring, boolean styling) {
+    public Barber(String userId, String imageUrl, String name, String phone, String details, String price, String schedule, String payments, boolean haircut, boolean shave, boolean coloring, boolean styling, String locationType, String barbershopName, String streetAddress, String buildingFloor, String city, String stateRegion, String zipCode, String country) {
         this.userId = userId;
         this.imageUrl = imageUrl;
         this.name = name;
+        this.phone = phone;
         this.details = details;
         this.price = price;
         this.schedule = schedule;
@@ -32,32 +39,15 @@ public class Barber implements Parcelable{
         this.shave = shave;
         this.coloring = coloring;
         this.styling = styling;
+        this.locationType = locationType;
+        this.barbershopName = barbershopName;
+        this.streetAddress = streetAddress;
+        this.buildingFloor = buildingFloor;
+        this.city = city;
+        this.stateRegion = stateRegion;
+        this.zipCode = zipCode;
+        this.country = country;
     }
-    protected Barber(Parcel in) {
-        userId = in.readString();
-        imageUrl = in.readString();
-        name = in.readString();
-        details = in.readString();
-        price = in.readString();
-        schedule = in.readString();
-        payments = in.readString();
-        haircut = in.readByte() != 0;
-        shave = in.readByte() != 0;
-        coloring = in.readByte() != 0;
-        styling = in.readByte() != 0;
-    }
-
-    public static final Creator<Barber> CREATOR = new Creator<Barber>() {
-        @Override
-        public Barber createFromParcel(Parcel in) {
-            return new Barber(in);
-        }
-
-        @Override
-        public Barber[] newArray(int size) {
-            return new Barber[size];
-        }
-    };
 
     // Getter and Setter methods for all fields
 
@@ -83,6 +73,14 @@ public class Barber implements Parcelable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getDetails() {
@@ -148,23 +146,68 @@ public class Barber implements Parcelable{
     public void setStyling(boolean styling) {
         this.styling = styling;
     }
-    @Override
-    public int describeContents() {
-        return 0;
+
+    public String getLocationType() {
+        return locationType;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(userId);
-        parcel.writeString(imageUrl);
-        parcel.writeString(name);
-        parcel.writeString(details);
-        parcel.writeString(price);
-        parcel.writeString(schedule);
-        parcel.writeString(payments);
-        parcel.writeByte((byte) (haircut ? 1 : 0));
-        parcel.writeByte((byte) (shave ? 1 : 0));
-        parcel.writeByte((byte) (coloring ? 1 : 0));
-        parcel.writeByte((byte) (styling ? 1 : 0));
+    public void setLocationType(String locationType) {
+        this.locationType = locationType;
+    }
+
+    public String getBarbershopName() {
+        return barbershopName;
+    }
+
+    public void setBarbershopName(String barbershopName) {
+        this.barbershopName = barbershopName;
+    }
+
+    public String getStreetAddress() {
+        return streetAddress;
+    }
+
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
+    }
+
+    public String getBuildingFloor() {
+        return buildingFloor;
+    }
+
+    public void setBuildingFloor(String buildingFloor) {
+        this.buildingFloor = buildingFloor;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStateRegion() {
+        return stateRegion;
+    }
+
+    public void setStateRegion(String stateRegion) {
+        this.stateRegion = stateRegion;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }
