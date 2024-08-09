@@ -15,8 +15,8 @@
             android:layout_height="wrap_content"
             android:hint="Name"
             android:layout_marginBottom="8dp"
-            android:textColor="#FFFFFF" />
-        //    android:hintTextColor="#AAAAAA"/>
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA" />
 
         <EditText
             android:id="@+id/service_price"
@@ -25,14 +25,16 @@
             android:hint="Price"
             android:layout_marginBottom="8dp"
             android:textColor="#FFFFFF"
-            />
+            android:textColorHint="#AAAAAA" />
+
         <EditText
             android:id="@+id/service_duration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Duration"
             android:layout_marginBottom="8dp"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA" />
 
         <EditText
             android:id="@+id/service_description"
@@ -40,8 +42,8 @@
             android:layout_height="wrap_content"
             android:hint="Description"
             android:layout_marginBottom="8dp"
-            android:textColor="#FFFFFF" />
-          //android:hintTextColor="#AAAAAA"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA" />
 
         <TextView
             android:layout_width="match_parent"
