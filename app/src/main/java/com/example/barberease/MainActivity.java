@@ -27,11 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private FirebaseAuth mAuth;
-    private RecyclerView recommendedShopsRecyclerView, recommendedBarbersRecyclerView;
-    private TextView noShopsTextView, noBarbersTextView;
+    private RecyclerView categoriesRecyclerView, recommendedBarbersRecyclerView;
+    private TextView noCategoriesTextView, noBarbersTextView;
     private ProgressBar progressBar;
     private DatabaseReference databaseReference;
-    private List<BarberShop> shopList;
+    private List<Category> categoryList;
     private List<Barber> barberList;
 
     private BottomNavigationView bottomNavigationView;
@@ -44,15 +44,14 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        recommendedShopsRecyclerView = findViewById(R.id.recommended_shops_recycler_view);
+        categoriesRecyclerView = findViewById(R.id.categories_recycler_view);
         recommendedBarbersRecyclerView = findViewById(R.id.recommended_barbers_recycler_view);
-        noShopsTextView = findViewById(R.id.no_shops_text_view);
+        noCategoriesTextView = findViewById(R.id.no_categories_text_view);
         noBarbersTextView = findViewById(R.id.no_barbers_text_view);
         progressBar = findViewById(R.id.progressBar);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         setupRecyclerViews();
-        fetchDataFromDatabase();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -85,32 +84,40 @@ public class MainActivity extends AppCompatActivity {
             finish();
         } else {
             Log.d(TAG, "Current user: " + currentUser.getEmail());
+            fetchDataFromDatabase();
         }
     }
 
     private void setupRecyclerViews() {
-        recommendedShopsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recommendedBarbersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recommendedBarbersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     }
 
     private void fetchDataFromDatabase() {
         progressBar.setVisibility(View.VISIBLE);
 
-        databaseReference.child("shops").addValueEventListener(new ValueEventListener() {
+        // Fetch Categories
+        databaseReference.child("categories").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                shopList = new ArrayList<>();
+                categoryList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    BarberShop shop = dataSnapshot.getValue(BarberShop.class);
-                    shopList.add(shop);
+                    Category category = dataSnapshot.getValue(Category.class);
+                    if (category != null) {
+                        categoryList.add(category);
+                        Log.d(TAG, "Category added: " + category.getName());
+                    } else {
+                        Log.e(TAG, "Category is null for snapshot: " + dataSnapshot.toString());
+                    }
                 }
-                if (shopList.isEmpty()) {
-                    noShopsTextView.setVisibility(View.VISIBLE);
+                if (categoryList.isEmpty()) {
+                    noCategoriesTextView.setVisibility(View.VISIBLE);
                 } else {
-                    noShopsTextView.setVisibility(View.GONE);
-                    ImageAdapter shopAdapter = new ImageAdapter((List<Object>)(List<?>) shopList, MainActivity.this);
-                    recommendedShopsRecyclerView.setAdapter(shopAdapter);
-                    shopAdapter.notifyDataSetChanged();
+                    noCategoriesTextView.setVisibility(View.GONE);
+                    CategoryAdapter categoryAdapter = new CategoryAdapter(categoryList, MainActivity.this);
+                    categoriesRecyclerView.setAdapter(categoryAdapter);
+                    categoryAdapter.notifyDataSetChanged();
+                    Log.d(TAG, "Adapter set with item count: " + categoryAdapter.getItemCount());
                 }
                 progressBar.setVisibility(View.GONE);
             }
@@ -119,17 +126,24 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(MainActivity.this, "Failed to load data.", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
+                Log.e(TAG, "Database error: " + error.getMessage());
             }
         });
 
+        // Fetch Barbers
         databaseReference.child("barbers").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d(TAG,"list " + snapshot.getChildrenCount());
                 barberList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Barber barber = dataSnapshot.getValue(Barber.class);
-                    barberList.add(barber);
-                    Log.d(TAG, "Barber added: " + barber.getName());
+                    if (barber != null) {
+                        barberList.add(barber);
+                        Log.d(TAG, "Barber added: " + barber.getName());
+                    } else {
+                        Log.e(TAG, "Barber is null for snapshot: " + dataSnapshot.toString());
+                    }
                 }
                 Log.d(TAG, "Total barbers fetched: " + barberList.size());
                 if (barberList.isEmpty()) {
@@ -148,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(MainActivity.this, "Failed to load data.", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
+                Log.e(TAG, "Database error: " + error.getMessage());
             }
         });
     }
