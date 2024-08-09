@@ -1,64 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/barberImage"
-            android:layout_width="match_parent"
+            android:id="@+id/barber_image"
+            android:layout_width="200dp"
             android:layout_height="200dp"
+            android:layout_gravity="center"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_foreground" />
+            android:src="@drawable/ic_profile" />
 
         <TextView
-            android:id="@+id/barberName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Name"
-            android:textSize="24sp"
             android:textStyle="bold"
-            android:layout_marginTop="16dp" />
-
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:textSize="18sp" />
         <TextView
-            android:id="@+id/barberDescription"
+            android:id="@+id/barber_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description"
-            android:layout_marginTop="8dp" />
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/barberAvailability"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Availability"
-            android:layout_marginTop="8dp" />
+            android:text="Phone"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/barber_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/barberServices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Services Offered"
-            android:layout_marginTop="8dp" />
-
+            android:text="Address"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:textSize="18sp" />
         <TextView
-            android:id="@+id/barberPayments"
+            android:id="@+id/barber_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Payment Methods"
-            android:layout_marginTop="8dp" />
-
-        <TextView
-            android:id="@+id/barberPosts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Posts"
-            android:layout_marginTop="8dp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 </ScrollView>
