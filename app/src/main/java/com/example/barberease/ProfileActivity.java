@@ -51,7 +51,6 @@ public class ProfileActivity extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             profileEmailTextView.setText(user.getEmail());
-            // Load other profile data like name if available
             loadUserProfile(user.getUid());
         }
 
