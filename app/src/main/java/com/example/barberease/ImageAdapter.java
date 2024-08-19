@@ -39,7 +39,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             imageUrl = barber.getImageUrl();
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context,BarberDetailsActivity.class);
-                intent.putExtra("barber", barber);
+                intent.putExtra("barber", (CharSequence) barber);
                 context.startActivity(intent);
             });
         } else if (item instanceof BarberShop) {
