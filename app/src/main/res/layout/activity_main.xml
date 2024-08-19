@@ -6,100 +6,109 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- Search Bar -->
-    <EditText
-        android:id="@+id/search_bar"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:hint="Search"
-        android:padding="10dp"
-        android:background="@drawable/search_bar_background" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <!-- Ads and Offers -->
-    <TextView
-        android:id="@+id/ads_offers_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/search_bar"
-        android:layout_margin="16dp"
-        android:text="Ads and Offers"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/ads_offers_image"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_below="@id/ads_offers_title"
-        android:layout_margin="16dp" />
+            <!-- Search Bar -->
+            <EditText
+                android:id="@+id/search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:drawableStart="@android:drawable/ic_menu_search"
+                android:hint="Search"
+                android:padding="10dp"
+                android:background="@drawable/search_bar_background" />
 
-    <!-- Recommended Shops -->
-    <TextView
-        android:id="@+id/recommended_shops_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ads_offers_image"
-        android:layout_margin="16dp"
-        android:text="Recommended Shops"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+            <!-- Ads and Offers -->
+            <TextView
+                android:id="@+id/ads_offers_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ads and Offers"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recommended_shops_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_below="@id/recommended_shops_title"
-        android:layout_margin="16dp"
-        android:orientation="horizontal" />
+            <ImageView
+                android:id="@+id/ads_offers_image"
+                android:layout_width="match_parent"
+                android:layout_height="77dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp" />
 
-    <TextView
-        android:id="@+id/no_shops_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No shops found"
-        android:textSize="18sp"
-        android:visibility="gone"
-        android:layout_below="@id/recommended_shops_title"
-        android:textAlignment="center" />
+            <!-- Categories -->
+            <TextView
+                android:id="@+id/recommended_shops_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categories"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
 
-    <!-- Recommended Barbers -->
-    <TextView
-        android:id="@+id/recommended_barbers_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/recommended_shops_recycler_view"
-        android:layout_margin="16dp"
-        android:text="Recommended Barbers"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+            <TextView
+                android:id="@+id/no_categories_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Categories Available"
+                android:visibility="gone"
+                android:layout_marginBottom="8dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recommended_barbers_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_below="@id/recommended_barbers_title"
-        android:layout_margin="16dp"
-        android:orientation="horizontal" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/categories_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp" />
 
-    <TextView
-        android:id="@+id/no_barbers_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No barbers found"
-        android:textSize="18sp"
-        android:visibility="gone"
-        android:layout_below="@id/recommended_barbers_title"
-        android:textAlignment="center" />
+            <!-- Recommended Barbers -->
+            <TextView
+                android:id="@+id/recommended_barbers_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recommended Barbers"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
 
-    <!-- Progress Bar -->
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recommended_barbers_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/no_barbers_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No barbers found"
+                android:textSize="18sp"
+                android:visibility="gone"
+                android:textAlignment="center"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Progress Bar -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:layout_marginBottom="16dp" />
+        </LinearLayout>
+    </ScrollView>
 
     <!-- Bottom Navigation Bar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

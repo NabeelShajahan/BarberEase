@@ -1,6 +1,7 @@
 package com.example.barberease;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,11 @@ import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
-    private List<String> imageList;
+    private List<Object> itemList;
     private Context context;
 
-    public ImageAdapter(List<String> imageList, Context context) {
-        this.imageList = imageList;
+    public ImageAdapter(List<Object> itemList, Context context) {
+        this.itemList = itemList;
         this.context = context;
     }
 
@@ -30,31 +31,43 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        String imageUrl = imageList.get(position);
+        Object item = itemList.get(position);
+        String imageUrl = null;
+
+        if (item instanceof Barber) {
+            Barber barber = (Barber) item;
+            imageUrl = barber.getImageUrl();
+            holder.itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context,BarberDetailsActivity.class);
+                intent.putExtra("barber", (CharSequence) barber);
+                context.startActivity(intent);
+            });
+        } else if (item instanceof BarberShop) {
+            BarberShop shop = (BarberShop) item;
+            imageUrl = shop.getImageUrl();
+            holder.itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, BarberShop.class);
+                intent.putExtra("shop", shop);
+                context.startActivity(intent);
+            });
+        }
+
         Glide.with(context).load(imageUrl).into(holder.imageView);
+
+
     }
 
     @Override
     public int getItemCount() {
-        return imageList.size();
+        return itemList.size();
     }
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ImageViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image_view);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION) {
-                Toast.makeText(context, "Clicked on item " + position, Toast.LENGTH_SHORT).show();
-                // Implement further action such as opening a detail activity
-            }
         }
     }
 }

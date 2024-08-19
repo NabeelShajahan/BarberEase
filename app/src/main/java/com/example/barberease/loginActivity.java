@@ -3,6 +3,7 @@ package com.example.barberease;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,13 +14,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
 
 public class loginActivity extends AppCompatActivity {
 
+    private static final String TAG = "loginActivity";
     private EditText emailEditText, passwordEditText;
     private Button loginButton;
     private ProgressBar progressBar;
@@ -86,20 +90,29 @@ public class loginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
-                    Toast.makeText(loginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(loginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    if (user != null) {
+                        Log.d(TAG, "signInWithEmail:success");
+                        Log.d(TAG, "User ID: " + user.getUid());
+                        Log.d(TAG, "User Email: " + user.getEmail());
+                        Toast.makeText(loginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(loginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 } else {
                     try {
                         throw task.getException();
                     } catch (FirebaseAuthInvalidUserException e) {
+                        Log.w(TAG, "signInWithEmail:failure - invalid user", e);
                         emailEditText.setError("No account with this email");
                         emailEditText.requestFocus();
                     } catch (FirebaseAuthInvalidCredentialsException e) {
+                        Log.w(TAG, "signInWithEmail:failure - invalid credentials", e);
                         passwordEditText.setError("Incorrect password");
                         passwordEditText.requestFocus();
                     } catch (Exception e) {
+                        Log.w(TAG, "signInWithEmail:failure", e);
                         Toast.makeText(loginActivity.this, "Authentication failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
