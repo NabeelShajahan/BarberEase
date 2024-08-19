@@ -1,0 +1,132 @@
+<!-- res/layout/activity_address.xml -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/address_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ADDRESS"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/location_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Location Type"
+            android:textColorHint="#AAAAAA"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#AAAAAA"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/barbershop_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Barbershop Name"
+            android:textColorHint="#AAAAAA"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#AAAAAA"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/street_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Street Address"
+            android:textColorHint="#AAAAAA"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#AAAAAA"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/building_floor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Building, Floor, Suite, Unit, etc."
+            android:textColorHint="#AAAAAA"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#AAAAAA"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="City"
+            android:textColorHint="#AAAAAA"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#AAAAAA"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/state_region"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="State/Region"
+            android:textColorHint="#AAAAAA"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#AAAAAA"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/zip_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Zip Code"
+            android:textColorHint="#AAAAAA"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#AAAAAA"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/country_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="COUNTRY"
+            android:textColor="#AAAAAA"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/country"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Canada"
+            android:textColorHint="#AAAAAA"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#AAAAAA"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/hours_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="HOURS"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Repeat similar EditText or Switch for each day of the week -->
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SAVE"
+            android:textColor="#000000"
+            android:background="#FFD700"
+            android:textStyle="bold" />
+    </LinearLayout>
+</ScrollView>
