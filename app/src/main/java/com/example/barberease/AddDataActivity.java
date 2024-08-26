@@ -57,28 +57,30 @@ public class AddDataActivity extends AppCompatActivity {
         String country = countryEditText.getText().toString().trim();
         String locationType = locationTypeEditText.getText().toString().trim();
 
-        Barber barber = new Barber(
-                /* userId */ "someId",
-                imageUrl,
-                name,
-                phone,
-                /* details */ "some details",
-                /* price */ "some price",
-                /* schedule */ "some schedule",
-                /* payments */ "some payments",
-                /* haircut */ true,
-                /* shave */ false,
-                /* coloring */ true,
-                /* styling */ true,
-                locationType,
-                name,
-                streetAddress,
-                buildingFloor,
-                city,
-                stateRegion,
-                zipCode,
-                country
-        );
+
+        Barber barber = new Barber();
+//        Barber barber = new Barber(
+//                /* userId */ "someId",
+//                imageUrl,
+//                name,
+//                phone,
+//                /* details */ "some details",
+//                /* price */ "some price",
+//                /* schedule */ "some schedule",
+//                /* payments */ "some payments",
+//                /* haircut */ true,
+//                /* shave */ false,
+//                /* coloring */ true,
+//                /* styling */ true,
+//                locationType,
+//                name,
+//                streetAddress,
+//                buildingFloor,
+//                city,
+//                stateRegion,
+//                zipCode,
+//                country,null,null
+//        );
 
         barbersRef.child("barber1").setValue(barber).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

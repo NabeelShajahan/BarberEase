@@ -1,13 +1,11 @@
 package com.example.barberease;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,11 +13,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AddressActivity extends AppCompatActivity {
 
-    private static final String TAG = "AddressActivity";
-
     private EditText locationType, barbershopName, streetAddress, buildingFloor, city, stateRegion, zipCode, country;
+    private Switch sundaySwitch, mondaySwitch, tuesdaySwitch, wednesdaySwitch, thursdaySwitch, fridaySwitch, saturdaySwitch;
+    private EditText sundayHours, mondayHours, tuesdayHours, wednesdayHours, thursdayHours, fridayHours, saturdayHours;
     private Button saveButton;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
@@ -30,6 +31,17 @@ public class AddressActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
 
+        // Initialize all views
+        initializeViews();
+
+        mAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference("barbers");
+        barberId = mAuth.getCurrentUser().getUid();
+
+        saveButton.setOnClickListener(v -> saveAddress());
+    }
+
+    private void initializeViews() {
         locationType = findViewById(R.id.location_type);
         barbershopName = findViewById(R.id.barbershop_name);
         streetAddress = findViewById(R.id.street_address);
@@ -38,58 +50,25 @@ public class AddressActivity extends AppCompatActivity {
         stateRegion = findViewById(R.id.state_region);
         zipCode = findViewById(R.id.zip_code);
         country = findViewById(R.id.country);
+
+        sundaySwitch = findViewById(R.id.switch_sunday);
+        mondaySwitch = findViewById(R.id.switch_monday);
+        tuesdaySwitch = findViewById(R.id.switch_tuesday);
+        wednesdaySwitch = findViewById(R.id.switch_wednesday);
+        thursdaySwitch = findViewById(R.id.switch_thursday);
+        fridaySwitch = findViewById(R.id.switch_friday);
+        saturdaySwitch = findViewById(R.id.switch_saturday);
+
+        sundayHours = findViewById(R.id.hours_sunday);
+        mondayHours = findViewById(R.id.hours_monday);
+        tuesdayHours = findViewById(R.id.hours_tuesday);
+        wednesdayHours = findViewById(R.id.hours_wednesday);
+        thursdayHours = findViewById(R.id.hours_thursday);
+        fridayHours = findViewById(R.id.hours_friday);
+        saturdayHours = findViewById(R.id.hours_saturday);
+
         saveButton = findViewById(R.id.save_button);
-
-        mAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference("barbers");
-        barberId = mAuth.getCurrentUser().getUid();
-
-        saveButton.setEnabled(false); // Initially disable the save button
-
-        // Add TextWatchers to enable/disable save button based on input
-        locationType.addTextChangedListener(textWatcher);
-        barbershopName.addTextChangedListener(textWatcher);
-        streetAddress.addTextChangedListener(textWatcher);
-        buildingFloor.addTextChangedListener(textWatcher);
-        city.addTextChangedListener(textWatcher);
-        stateRegion.addTextChangedListener(textWatcher);
-        zipCode.addTextChangedListener(textWatcher);
-        country.addTextChangedListener(textWatcher);
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveAddress();
-            }
-        });
     }
-
-    private final TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            // No action needed here
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            // Enable the save button if all fields are filled
-            saveButton.setEnabled(
-                    !TextUtils.isEmpty(locationType.getText().toString().trim()) &&
-                            !TextUtils.isEmpty(barbershopName.getText().toString().trim()) &&
-                            !TextUtils.isEmpty(streetAddress.getText().toString().trim()) &&
-                            !TextUtils.isEmpty(buildingFloor.getText().toString().trim()) &&
-                            !TextUtils.isEmpty(city.getText().toString().trim()) &&
-                            !TextUtils.isEmpty(stateRegion.getText().toString().trim()) &&
-                            !TextUtils.isEmpty(zipCode.getText().toString().trim()) &&
-                            !TextUtils.isEmpty(country.getText().toString().trim())
-            );
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            // No action needed here
-        }
-    };
 
     private void saveAddress() {
         String locType = locationType.getText().toString().trim();
@@ -101,34 +80,57 @@ public class AddressActivity extends AppCompatActivity {
         String zip = zipCode.getText().toString().trim();
         String countryName = country.getText().toString().trim();
 
-        if (locType.isEmpty() || barberName.isEmpty() || street.isEmpty() || building.isEmpty() || cityName.isEmpty() || state.isEmpty() || zip.isEmpty() || countryName.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+        // Validate input fields
+        if (locType.isEmpty() || barberName.isEmpty() || street.isEmpty() || cityName.isEmpty() || state.isEmpty() || zip.isEmpty() || countryName.isEmpty()) {
+            Toast.makeText(AddressActivity.this, "Please fill all the required fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Address address = new Address(locType, barberName, street, building, cityName, state, zip, countryName);
+        // Save the hours as a map
+        Map<String, WorkingHours> hours = new HashMap<>();
+        hours.put("sunday", new WorkingHours(sundaySwitch.isChecked(), sundayHours.getText().toString().trim()));
+        hours.put("monday", new WorkingHours(mondaySwitch.isChecked(), mondayHours.getText().toString().trim()));
+        hours.put("tuesday", new WorkingHours(tuesdaySwitch.isChecked(), tuesdayHours.getText().toString().trim()));
+        hours.put("wednesday", new WorkingHours(wednesdaySwitch.isChecked(), wednesdayHours.getText().toString().trim()));
+        hours.put("thursday", new WorkingHours(thursdaySwitch.isChecked(), thursdayHours.getText().toString().trim()));
+        hours.put("friday", new WorkingHours(fridaySwitch.isChecked(), fridayHours.getText().toString().trim()));
+        hours.put("saturday", new WorkingHours(saturdaySwitch.isChecked(), saturdayHours.getText().toString().trim()));
 
-        Log.d(TAG, "Saving Address: " + address);
-
+        Address address = new Address(locType, barberName, street, building, cityName, state, zip, countryName, hours);
         databaseReference.child(barberId).child("address").setValue(address).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Log.d(TAG, "Address saved successfully");
                 Toast.makeText(AddressActivity.this, "Address Saved Successfully", Toast.LENGTH_SHORT).show();
                 finish(); // Close activity after saving
             } else {
-                Log.e(TAG, "Failed to save address", task.getException());
                 Toast.makeText(AddressActivity.this, "Failed to Save Address", Toast.LENGTH_SHORT).show();
+                Log.e("AddressActivity", "Failed to save address", task.getException());
             }
         });
     }
 
-    public static class Address {
-        public String locationType, barbershopName, streetAddress, buildingFloor, city, stateRegion, zipCode, country;
+    public static class WorkingHours {
+        public boolean available;
+        public String hours;
 
-        public Address() {
+        public WorkingHours() {
+            // Default constructor required for calls to DataSnapshot.getValue(WorkingHours.class)
         }
 
-        public Address(String locationType, String barbershopName, String streetAddress, String buildingFloor, String city, String stateRegion, String zipCode, String country) {
+        public WorkingHours(boolean available, String hours) {
+            this.available = available;
+            this.hours = hours;
+        }
+    }
+
+    public static class Address {
+        public String locationType, barbershopName, streetAddress, buildingFloor, city, stateRegion, zipCode, country;
+        public Map<String, WorkingHours> hours;
+
+        public Address() {
+            // Default constructor required for calls to DataSnapshot.getValue(Address.class)
+        }
+
+        public Address(String locationType, String barbershopName, String streetAddress, String buildingFloor, String city, String stateRegion, String zipCode, String country, Map<String, WorkingHours> hours) {
             this.locationType = locationType;
             this.barbershopName = barbershopName;
             this.streetAddress = streetAddress;
@@ -137,20 +139,7 @@ public class AddressActivity extends AppCompatActivity {
             this.stateRegion = stateRegion;
             this.zipCode = zipCode;
             this.country = country;
-        }
-
-        @Override
-        public String toString() {
-            return "Address{" +
-                    "locationType='" + locationType + '\'' +
-                    ", barbershopName='" + barbershopName + '\'' +
-                    ", streetAddress='" + streetAddress + '\'' +
-                    ", buildingFloor='" + buildingFloor + '\'' +
-                    ", city='" + city + '\'' +
-                    ", stateRegion='" + stateRegion + '\'' +
-                    ", zipCode='" + zipCode + '\'' +
-                    ", country='" + country + '\'' +
-                    '}';
+            this.hours = hours;
         }
     }
 }

@@ -1,0 +1,48 @@
+<!-- res/layout/activity_edit_info.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#000000">
+
+    <EditText
+        android:id="@+id/name_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:textColorHint="#AAAAAA"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#AAAAAA"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/bio_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Bio"
+        android:textColorHint="#AAAAAA"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#AAAAAA"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/phone_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone Number"
+        android:textColorHint="#AAAAAA"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#AAAAAA"
+        android:layout_marginBottom="16dp"
+        android:inputType="phone" />
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SAVE"
+        android:textColor="#000000"
+        android:background="#FFD700"
+        android:textStyle="bold" />
+</LinearLayout>

@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#000000">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,53 +12,60 @@
 
         <ImageView
             android:id="@+id/barber_image"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_profile" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp"
-            android:textSize="18sp" />
-        <TextView
             android:id="@+id/barber_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Phone"
+            android:text="Barber Name"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp"
-            android:textSize="18sp" />
+            android:layout_marginBottom="8dp" />
+
         <TextView
             android:id="@+id/barber_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp" />
+            android:text="Phone Number"
+            android:textColor="#AAAAAA"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp" />
 
         <TextView
+            android:id="@+id/barber_bio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Address"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp"
-            android:textSize="18sp" />
+            android:text="Bio"
+            android:textColor="#AAAAAA"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp" />
+
         <TextView
             android:id="@+id/barber_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp" />
+            android:text="Address"
+            android:textColor="#AAAAAA"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp" />
 
+        <TextView
+            android:id="@+id/barber_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Working Hours"
+            android:textColor="#AAAAAA"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp" />
     </LinearLayout>
 </ScrollView>
