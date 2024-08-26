@@ -7,8 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.Glide;
-
+import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder> {
@@ -31,7 +30,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewH
     @Override
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
         String photoUrl = photosList.get(position);
-        Glide.with(context).load(photoUrl).into(holder.photoImageView);
+        Picasso.get().load(photoUrl).into(holder.photoImageView);
     }
 
     @Override
@@ -39,8 +38,14 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewH
         return photosList.size();
     }
 
+    public void updatePhotos(List<String> newPhotos) {
+        this.photosList.clear();
+        this.photosList.addAll(newPhotos);
+        notifyDataSetChanged();
+    }
+
     public static class PhotoViewHolder extends RecyclerView.ViewHolder {
-        public ImageView photoImageView;
+        ImageView photoImageView;
 
         public PhotoViewHolder(@NonNull View itemView) {
             super(itemView);

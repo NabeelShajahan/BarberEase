@@ -7,12 +7,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,7 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +37,7 @@ public class PhotosActivity extends AppCompatActivity {
     private Uri imageUri;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference databaseReference;
+    private DatabaseReference barberReference;
     private StorageReference storageReference;
     private String barberId;
     private List<String> photosList;
@@ -45,28 +48,39 @@ public class PhotosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photos);
 
+        // Initialize UI components
         uploadPhotoButton = findViewById(R.id.upload_photo_button);
         noPhotosIcon = findViewById(R.id.no_photos_icon);
         photosRecyclerView = findViewById(R.id.photos_recycler_view);
 
-        mAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference("barbers");
-        storageReference = FirebaseStorage.getInstance().getReference("barber_posts");
-        barberId = mAuth.getCurrentUser().getUid();
-        photosList = new ArrayList<>();
+        // Initialize Firebase references
+        initFirebase();
 
+        // Initialize RecyclerView
+        photosList = new ArrayList<>();
         photosRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         photosAdapter = new PhotosAdapter(this, photosList);
         photosRecyclerView.setAdapter(photosAdapter);
 
+        // Load existing photos from Firebase
         loadPhotos();
 
-        uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFileChooser();
-            }
-        });
+        // Set up button click listener for uploading photos
+        uploadPhotoButton.setOnClickListener(v -> openFileChooser());
+    }
+
+    private void initFirebase() {
+        mAuth = FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference("barber_photos");
+        barberReference = FirebaseDatabase.getInstance().getReference("barbers");
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            barberId = currentUser.getUid();
+        } else {
+            showToast("User not authenticated.");
+            finish(); // End the activity if the user is not authenticated
+        }
     }
 
     private void openFileChooser() {
@@ -88,22 +102,37 @@ public class PhotosActivity extends AppCompatActivity {
     private void uploadPhoto() {
         if (imageUri != null) {
             StorageReference fileReference = storageReference.child(barberId).child(System.currentTimeMillis() + ".jpg");
+
             fileReference.putFile(imageUri)
                     .addOnSuccessListener(taskSnapshot -> fileReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                        String uploadId = databaseReference.push().getKey();
-                        databaseReference.child(barberId).child("photos").child(uploadId).setValue(uri.toString());
-                        photosList.add(uri.toString());
+                        String photoUrl = uri.toString();
+                        savePhotoUrlToDatabase(photoUrl);
+                    }).addOnFailureListener(e -> showToast("Failed to get download URL: " + e.getMessage())))
+                    .addOnFailureListener(e -> showToast("Failed to upload photo: " + e.getMessage()));
+        } else {
+            showToast("No image selected");
+        }
+    }
+
+    private void savePhotoUrlToDatabase(String photoUrl) {
+        String uploadId = barberReference.child(barberId).child("photos").push().getKey();
+        if (uploadId != null) {
+            barberReference.child(barberId).child("photos").child(uploadId).setValue(photoUrl)
+                    .addOnSuccessListener(aVoid -> {
+                        photosList.add(photoUrl);
                         photosAdapter.notifyDataSetChanged();
                         noPhotosIcon.setVisibility(View.GONE);
                         photosRecyclerView.setVisibility(View.VISIBLE);
-                        Toast.makeText(PhotosActivity.this, "Photo uploaded", Toast.LENGTH_SHORT).show();
-                    }))
-                    .addOnFailureListener(e -> Toast.makeText(PhotosActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                        showToast("Photo uploaded successfully");
+                    })
+                    .addOnFailureListener(e -> showToast("Failed to save photo to database: " + e.getMessage()));
+        } else {
+            showToast("Failed to generate unique key for photo");
         }
     }
 
     private void loadPhotos() {
-        databaseReference.child(barberId).child("photos").addValueEventListener(new ValueEventListener() {
+        barberReference.child(barberId).child("photos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 photosList.clear();
@@ -112,19 +141,27 @@ public class PhotosActivity extends AppCompatActivity {
                     photosList.add(photoUrl);
                 }
                 photosAdapter.notifyDataSetChanged();
-                if (photosList.isEmpty()) {
-                    noPhotosIcon.setVisibility(View.VISIBLE);
-                    photosRecyclerView.setVisibility(View.GONE);
-                } else {
-                    noPhotosIcon.setVisibility(View.GONE);
-                    photosRecyclerView.setVisibility(View.VISIBLE);
-                }
+                updateUI();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(PhotosActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                showToast("Failed to load photos: " + error.getMessage());
             }
         });
+    }
+
+    private void updateUI() {
+        if (photosList.isEmpty()) {
+            noPhotosIcon.setVisibility(View.VISIBLE);
+            photosRecyclerView.setVisibility(View.GONE);
+        } else {
+            noPhotosIcon.setVisibility(View.GONE);
+            photosRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(PhotosActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 }

@@ -14,6 +14,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
     private List<Review> reviewsList;
 
     public ReviewsAdapter(List<Review> reviewsList) {
+
         this.reviewsList = reviewsList;
     }
 
