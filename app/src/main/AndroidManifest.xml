@@ -16,6 +16,9 @@
         android:theme="@style/Theme.BarberEase"
         tools:targetApi="31">
         <activity
+            android:name=".EditInfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProfilePictureActivity"
             android:exported="false" />
         <activity

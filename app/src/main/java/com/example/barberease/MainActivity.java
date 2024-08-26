@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView noCategoriesTextView, noBarbersTextView;
     private ProgressBar progressBar;
     private DatabaseReference databaseReference;
-    private List<Category> categoryList;
     private List<Barber> barberList;
 
     private BottomNavigationView bottomNavigationView;
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference("barbers");
 
         categoriesRecyclerView = findViewById(R.id.categories_recycler_view);
         recommendedBarbersRecyclerView = findViewById(R.id.recommended_barbers_recycler_view);
@@ -53,24 +52,23 @@ public class MainActivity extends AppCompatActivity {
 
         setupRecyclerViews();
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.nav_home) {
-                    return true;
-                } else if (itemId == R.id.nav_calendar) {
-                    Intent calendarIntent = new Intent(MainActivity.this, AppointmentsActivity.class);
-                    startActivity(calendarIntent);
-                    return true;
-                } else if (itemId == R.id.nav_list) {
-                    Intent listIntent = new Intent(MainActivity.this, ProfileActivity.class);
-                    startActivity(listIntent);
-                    return true;
-                }
-                return false;
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                return true;
+            } else if (itemId == R.id.nav_calendar) {
+                Intent calendarIntent = new Intent(MainActivity.this, AppointmentsActivity.class);
+                startActivity(calendarIntent);
+                return true;
+            } else if (itemId == R.id.nav_list) {
+                Intent listIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(listIntent);
+                return true;
             }
+            return false;
         });
+
+        fetchDataFromDatabase();
     }
 
     @Override
@@ -79,12 +77,10 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Log.d(TAG, "No current user, redirecting to LoginActivity");
-            Intent intent = new Intent(MainActivity.this, loginActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this, loginActivity.class));
             finish();
         } else {
             Log.d(TAG, "Current user: " + currentUser.getEmail());
-            fetchDataFromDatabase();
         }
     }
 
@@ -96,45 +92,9 @@ public class MainActivity extends AppCompatActivity {
     private void fetchDataFromDatabase() {
         progressBar.setVisibility(View.VISIBLE);
 
-        // Fetch Categories
-        databaseReference.child("categories").addValueEventListener(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                categoryList = new ArrayList<>();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Category category = dataSnapshot.getValue(Category.class);
-                    if (category != null) {
-                        categoryList.add(category);
-                        Log.d(TAG, "Category added: " + category.getName());
-                    } else {
-                        Log.e(TAG, "Category is null for snapshot: " + dataSnapshot.toString());
-                    }
-                }
-                if (categoryList.isEmpty()) {
-                    noCategoriesTextView.setVisibility(View.VISIBLE);
-                } else {
-                    noCategoriesTextView.setVisibility(View.GONE);
-                    CategoryAdapter categoryAdapter = new CategoryAdapter(categoryList, MainActivity.this);
-                    categoriesRecyclerView.setAdapter(categoryAdapter);
-                    categoryAdapter.notifyDataSetChanged();
-                    Log.d(TAG, "Adapter set with item count: " + categoryAdapter.getItemCount());
-                }
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(MainActivity.this, "Failed to load data.", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-                Log.e(TAG, "Database error: " + error.getMessage());
-            }
-        });
-
-        // Fetch Barbers
-        databaseReference.child("barbers").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d(TAG,"list " + snapshot.getChildrenCount());
                 barberList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Barber barber = dataSnapshot.getValue(Barber.class);
@@ -145,15 +105,12 @@ public class MainActivity extends AppCompatActivity {
                         Log.e(TAG, "Barber is null for snapshot: " + dataSnapshot.toString());
                     }
                 }
-                Log.d(TAG, "Total barbers fetched: " + barberList.size());
                 if (barberList.isEmpty()) {
                     noBarbersTextView.setVisibility(View.VISIBLE);
                 } else {
                     noBarbersTextView.setVisibility(View.GONE);
                     BarberAdapter barberAdapter = new BarberAdapter(barberList, MainActivity.this);
                     recommendedBarbersRecyclerView.setAdapter(barberAdapter);
-                    barberAdapter.notifyDataSetChanged();
-                    Log.d(TAG, "Adapter set with item count: " + barberAdapter.getItemCount());
                 }
                 progressBar.setVisibility(View.GONE);
             }
