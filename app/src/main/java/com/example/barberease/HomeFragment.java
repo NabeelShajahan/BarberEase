@@ -88,5 +88,7 @@ public class HomeFragment extends Fragment {
         addressAndHours.setOnClickListener(v -> startActivity(new Intent(getContext(), AddressActivity.class)));
         photos.setOnClickListener(v -> startActivity(new Intent(getContext(), PhotosActivity.class)));
         profilePicture.setOnClickListener(v -> startActivity(new Intent(getContext(), ProfilePictureActivity.class)));
+        info.setOnClickListener(v -> startActivity(new Intent(getContext(), EditInfoActivity.class))); // Add this line
+
     }
 }

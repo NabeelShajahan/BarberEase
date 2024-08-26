@@ -23,10 +23,10 @@ public class BarberDetailActivity extends AppCompatActivity {
 
         if (barber != null) {
             barberName.setText(barber.getName());
-            barberDetails.setText(barber.getDetails());
-            barberPrice.setText(barber.getPrice());
-            barberSchedule.setText(barber.getSchedule());
-            barberPayments.setText(barber.getPayments());
+            barberDetails.setText(barber.getBio());
+//            barberPrice.setText(barber.getPrice());
+//            barberSchedule.setText(barber.getSchedule());
+//            barberPayments.setText(barber.getPayments());
         }
     }
 }
