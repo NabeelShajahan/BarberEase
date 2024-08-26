@@ -45,7 +45,7 @@ public class ServicesFragment extends Fragment {
         saveButton = view.findViewById(R.id.save_button);
 
         mAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference("services");
+        databaseReference = FirebaseDatabase.getInstance().getReference("barbers");
         barberId = mAuth.getCurrentUser().getUid();
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -71,11 +71,11 @@ public class ServicesFragment extends Fragment {
             return;
         }
 
-        String serviceId = databaseReference.push().getKey();
+        String serviceId = databaseReference.child(barberId).child("services").push().getKey();
         Service service = new Service(serviceId, barberId, name, price, duration, description, premiumHours, offerPromotion);
 
         if (serviceId != null) {
-            databaseReference.child(serviceId).setValue(service).addOnCompleteListener(task -> {
+            databaseReference.child(barberId).child("services").child(serviceId).setValue(service).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(getActivity(), "Service saved successfully", Toast.LENGTH_SHORT).show();
                 } else {
