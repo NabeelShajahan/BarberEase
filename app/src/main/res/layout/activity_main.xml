@@ -16,29 +16,14 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Categories Section -->
             <TextView
-                android:id="@+id/recommended_shops_title"
+                android:id="@+id/weatherTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Categories"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
-            <TextView
-                android:id="@+id/no_categories_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No Categories Available"
-                android:visibility="gone"
-                android:layout_marginBottom="8dp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/categories_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp" />
+                android:text="Loading weather..."
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                android:textColor="@android:color/black" />
 
             <!-- Recommended Barbers -->
             <TextView

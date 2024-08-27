@@ -19,12 +19,6 @@
             android:name=".EditInfoActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfilePictureActivity"
-            android:exported="false" />
-        <activity
-            android:name=".PhotosActivity"
-            android:exported="false" />
-        <activity
             android:name=".ServicesFragment"
             android:exported="false" />
         <activity
@@ -43,16 +37,10 @@
             android:name=".BusinessAccountActivity"
             android:exported="false" />
         <activity
-            android:name=".SubscriptionsActivity"
-            android:exported="false" />
-        <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
         <activity
             android:name=".AppointmentsAdapter"
-            android:exported="false" />
-        <activity
-            android:name=".AddDataActivity"
             android:exported="false" />
         <activity
             android:name=".ProfileActivity"

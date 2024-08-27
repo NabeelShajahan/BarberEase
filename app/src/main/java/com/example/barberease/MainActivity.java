@@ -3,7 +3,6 @@ package com.example.barberease;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,19 +19,25 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private FirebaseAuth mAuth;
-    private RecyclerView categoriesRecyclerView, recommendedBarbersRecyclerView;
-    private TextView noCategoriesTextView, noBarbersTextView;
+    private RecyclerView recommendedBarbersRecyclerView;
+    private TextView noBarbersTextView, weatherTextView;
     private ProgressBar progressBar;
     private DatabaseReference databaseReference;
     private List<Barber> barberList;
-
     private BottomNavigationView bottomNavigationView;
 
     @Override
@@ -43,12 +48,13 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("barbers");
 
-        categoriesRecyclerView = findViewById(R.id.categories_recycler_view);
         recommendedBarbersRecyclerView = findViewById(R.id.recommended_barbers_recycler_view);
-        noCategoriesTextView = findViewById(R.id.no_categories_text_view);
         noBarbersTextView = findViewById(R.id.no_barbers_text_view);
+        weatherTextView = findViewById(R.id.weatherTextView);
         progressBar = findViewById(R.id.progressBar);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        fetchWeatherData("Montreal");
 
         setupRecyclerViews();
 
@@ -71,6 +77,40 @@ public class MainActivity extends AppCompatActivity {
         fetchDataFromDatabase();
     }
 
+    private void fetchWeatherData(String cityName) {
+        String apiKey = "3f100d26845afee479d24d125b80c106"; // Replace with your OpenWeather API key
+        String units = "metric"; // Use "imperial" for Fahrenheit
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.openweathermap.org/data/2.5/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WeatherService weatherService = retrofit.create(WeatherService.class);
+
+        Call<WeatherResponse> call = weatherService.getCurrentWeather(cityName, apiKey, units);
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    WeatherResponse weatherResponse = response.body();
+                    double temp = weatherResponse.getMain().getTemp();
+                    String description = weatherResponse.getWeather().get(0).getDescription();
+                    String weatherInfo = "Temp: " + temp + "°C, " + description;
+
+                    weatherTextView.setText(weatherInfo);
+                } else {
+                    Toast.makeText(MainActivity.this, "Failed to get weather data", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -85,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerViews() {
-        categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recommendedBarbersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     }
 
@@ -99,6 +138,8 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Barber barber = dataSnapshot.getValue(Barber.class);
                     if (barber != null) {
+                        String userId = dataSnapshot.getKey();
+                        barber.setUserId(userId);
                         barberList.add(barber);
                         Log.d(TAG, "Barber added: " + barber.getName());
                     } else {
