@@ -6,17 +6,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,14 +21,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.io.IOException;
 
 public class EditProfileActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
-    private EditText editName, editPhone, editPassword, editConfirmPassword;
+    private EditText editName, editPhone;
     private ImageView editImage;
     private Button saveButton, selectImageButton;
     private Uri imageUri;
@@ -47,8 +42,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
         editName = findViewById(R.id.edit_name);
         editPhone = findViewById(R.id.edit_phone);
-        editPassword = findViewById(R.id.edit_password);
-        editConfirmPassword = findViewById(R.id.edit_confirm_password);
         editImage = findViewById(R.id.edit_image);
         saveButton = findViewById(R.id.save_button);
         selectImageButton = findViewById(R.id.select_image_button);
@@ -62,19 +55,9 @@ public class EditProfileActivity extends AppCompatActivity {
             loadUserProfile(user.getUid());
         }
 
-        selectImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFileChooser();
-            }
-        });
+        selectImageButton.setOnClickListener(v -> openFileChooser());
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveUserProfile();
-            }
-        });
+        saveButton.setOnClickListener(v -> saveUserProfile());
     }
 
     private void openFileChooser() {
@@ -126,8 +109,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private void saveUserProfile() {
         String name = editName.getText().toString().trim();
         String phone = editPhone.getText().toString().trim();
-        String password = editPassword.getText().toString().trim();
-        String confirmPassword = editConfirmPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(name)) {
             editName.setError("Name is required");
@@ -135,15 +116,9 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(phone)) {
-            editPhone.setError("Phone number is required");
+        if (TextUtils.isEmpty(phone) || !phone.matches("\\d{10}")) {
+            editPhone.setError("Valid 10-digit phone number is required");
             editPhone.requestFocus();
-            return;
-        }
-
-        if (!TextUtils.isEmpty(password) && !password.equals(confirmPassword)) {
-            editConfirmPassword.setError("Passwords do not match");
-            editConfirmPassword.requestFocus();
             return;
         }
 
@@ -155,17 +130,6 @@ public class EditProfileActivity extends AppCompatActivity {
             databaseReference.child(userId).child("fullName").setValue(name);
             databaseReference.child(userId).child("phone").setValue(phone);
 
-            // Update password if it's changed
-            if (!TextUtils.isEmpty(password)) {
-                user.updatePassword(password).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(EditProfileActivity.this, "Password updated", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(EditProfileActivity.this, "Failed to update password", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
             if (imageUri != null) {
                 StorageReference fileReference = storageReference.child(userId + ".jpg");
                 fileReference.putFile(imageUri).addOnCompleteListener(task -> {
@@ -174,6 +138,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             String downloadUrl = uri.toString();
                             databaseReference.child(userId).child("profileImage").setValue(downloadUrl);
                             Toast.makeText(EditProfileActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
+                            finish(); // Navigate back to ProfileActivity
                         });
                     } else {
                         Toast.makeText(EditProfileActivity.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
@@ -181,12 +146,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
             } else {
                 Toast.makeText(EditProfileActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
+                finish(); // Navigate back to ProfileActivity
             }
-
-            // Navigate back to ProfileActivity after saving
-            Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-            startActivity(intent);
-            finish();
         }
     }
 }

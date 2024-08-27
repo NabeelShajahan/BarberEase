@@ -1,18 +1,15 @@
 package com.example.barberease;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,12 +21,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     private TextView profileNameTextView, profileEmailTextView;
     private ImageView profileImageView;
-    private Button notificationsButton, helpSupportButton, logoutButton, paymentsButton, subscriptionsButton, businessAccountButton;
+    private Button logoutButton, businessAccountButton, editProfileButton;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private BottomNavigationView bottomNavigationView;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,104 +35,49 @@ public class ProfileActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
 
         profileNameTextView = findViewById(R.id.profile_name);
-        profileEmailTextView = findViewById(R.id.profile_email);
         profileImageView = findViewById(R.id.profile_image);
-        notificationsButton = findViewById(R.id.notifications_button);
-        helpSupportButton = findViewById(R.id.help_support_button);
         logoutButton = findViewById(R.id.logout_button);
-        paymentsButton = findViewById(R.id.paymentsandsubscription_button);
         businessAccountButton = findViewById(R.id.business_account_button);
+        editProfileButton = findViewById(R.id.edit_profile_button);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            profileEmailTextView.setText(user.getEmail());
             loadUserProfile(user.getUid());
         }
 
-        profileImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                startActivity(intent);
-            }
+        // Open EditProfileActivity when clicking the Edit Profile button
+        editProfileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+            startActivity(intent);
         });
 
-        profileNameTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                startActivity(intent);
-            }
+        businessAccountButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, BusinessAccountActivity.class);
+            startActivity(intent);
         });
 
-        profileEmailTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                startActivity(intent);
-            }
+        logoutButton.setOnClickListener(v -> {
+            mAuth.signOut();
+            Intent intent = new Intent(ProfileActivity.this, loginActivity.class);
+            startActivity(intent);
+            finish();
         });
 
-        notificationsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle notifications logic
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                Intent homeIntent = new Intent(ProfileActivity.this, MainActivity.class);
+                startActivity(homeIntent);
+                return true;
+            } else if (itemId == R.id.nav_calendar) {
+                Intent calendarIntent = new Intent(ProfileActivity.this, AppointmentsActivity.class);
+                startActivity(calendarIntent);
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                return true;
             }
-        });
-
-        helpSupportButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle help and support logic
-            }
-        });
-
-        paymentsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, SubscriptionsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-        businessAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, BusinessAccountActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                Intent intent = new Intent(ProfileActivity.this, loginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.nav_home) {
-                    Intent homeIntent = new Intent(ProfileActivity.this, MainActivity.class);
-                    startActivity(homeIntent);
-                    return true;
-                } else if (itemId == R.id.nav_calendar) {
-                    Intent calendarIntent = new Intent(ProfileActivity.this, AppointmentsActivity.class);
-                    startActivity(calendarIntent);
-                    return true;
-                } else if (itemId == R.id.nav_profile) {
-                    // Stay in ProfileActivity
-                    return true;
-                }
-                return false;
-            }
+            return false;
         });
     }
 
@@ -146,7 +87,14 @@ public class ProfileActivity extends AppCompatActivity {
                 DataSnapshot snapshot = task.getResult();
                 if (snapshot.exists()) {
                     String name = snapshot.child("fullName").getValue(String.class);
+                    String imageUrl = snapshot.child("profileImage").getValue(String.class);
                     profileNameTextView.setText(name);
+
+                    if (imageUrl != null && !imageUrl.isEmpty()) {
+                        Glide.with(this).load(imageUrl).into(profileImageView);
+                    } else {
+                        profileImageView.setImageResource(R.drawable.ic_profile); // Default profile image
+                    }
                 } else {
                     Toast.makeText(ProfileActivity.this, "Profile not found", Toast.LENGTH_SHORT).show();
                 }

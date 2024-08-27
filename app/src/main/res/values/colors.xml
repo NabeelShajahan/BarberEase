@@ -9,4 +9,7 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="background_color">#F5F5F5</color>
     <color name="textColorPrimary">#212121</color>
+    <color name="primary_text_color">#212121</color>
+    <color name="light_background">#FFFFFF</color>
+    <color name="card_background_color">#FAFAFA</color>
 </resources>
