@@ -34,6 +34,7 @@ public class Barber {
         return userId;
     }
 
+
     public void setUserId(String userId) {
         this.userId = userId;
     }

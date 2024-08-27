@@ -26,27 +26,39 @@ public class BarberAdapter extends RecyclerView.Adapter<BarberAdapter.BarberView
     @NonNull
     @Override
     public BarberViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.activity_barber_adapter, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_barber, parent, false);
         return new BarberViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull BarberViewHolder holder, int position) {
-        Log.d("in barber dapter","barber count" + barberList.size());
+        Log.d("in barber adapter","barber count" + barberList.size());
         Barber barber = barberList.get(position);
         holder.barberNameTextView.setText(barber.getName());
+
         if (barber.getImageUrl() != null && !barber.getImageUrl().isEmpty()) {
-            Picasso.get().load(barber.getImageUrl()).into(holder.barberImageView);
+            Picasso.get().cancelRequest(holder.barberImageView);
+
+            Picasso.get()
+                    .load(barber.getImageUrl())
+                    .placeholder(R.drawable.ic_profile) // Set a placeholder image while loading
+                    .error(R.drawable.ic_profile) // Set default image in case of error
+                    .into(holder.barberImageView);
         } else {
-            holder.barberImageView.setImageResource(R.drawable.ic_profile); // Default icon
+            holder.barberImageView.setImageResource(R.drawable.ic_profile);
         }
+
+
         holder.itemView.setOnClickListener(v -> {
+            Log.d("BarberAdapter", "Item clicked: " + barber.getName());
             Intent intent = new Intent(context, BarberDetailsActivity.class);
             intent.putExtra("barberId", barber.getUserId());
             intent.putExtra("barberImageUrl", barber.getImageUrl());
             context.startActivity(intent);
         });
+
     }
+
 
     @Override
     public int getItemCount() {
