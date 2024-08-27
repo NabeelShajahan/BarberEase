@@ -5,7 +5,7 @@
     android:background="#000000"
     tools:context=".HomeFragment">
 
-    <!-- Address and Hours, Info, Photos, Profile Picture Links -->
+    <!-- Address and Hours, Info Links -->
     <TextView
         android:id="@+id/address_and_hours"
         android:layout_width="wrap_content"
@@ -29,79 +29,29 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
+    <!-- New Appointment Notification -->
     <TextView
-        android:id="@+id/photos"
+        android:id="@+id/new_appointment_notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/info"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
-        android:textColor="#FFD700"
-        android:text="Photos"
-        android:textSize="16sp"
+        android:text="You have a new appointment!"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
+    <!-- Appointment Details (Initially Hidden) -->
     <TextView
-        android:id="@+id/profile_picture"
+        android:id="@+id/appointment_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/photos"
-        android:layout_marginTop="8dp"
+        android:layout_below="@id/new_appointment_notification"
+        android:layout_marginTop="16dp"
         android:layout_centerHorizontal="true"
-        android:textColor="#FFD700"
-        android:text="Profile Picture"
+        android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <!-- Schedule and other data -->
-    <TextView
-        android:id="@+id/today_schedule"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:text="Today's Schedule: --"
-        android:layout_below="@id/profile_picture"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
-
-    <TextView
-        android:id="@+id/completed_appts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:text="Completed Appointments: --"
-        android:layout_below="@id/today_schedule"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
-
-    <TextView
-        android:id="@+id/estimated_revenue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:text="Estimated Revenue: --"
-        android:layout_below="@id/completed_appts"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
-
-    <TextView
-        android:id="@+id/hours_booked"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:text="Hours Booked: --"
-        android:layout_below="@id/estimated_revenue"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
-
-    <TextView
-        android:id="@+id/chair_utilization"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:text="Chair Utilization: --"
-        android:layout_below="@id/hours_booked"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
-
+        android:padding="12dp"
+        android:background="@drawable/rounded_background"/>
 </RelativeLayout>

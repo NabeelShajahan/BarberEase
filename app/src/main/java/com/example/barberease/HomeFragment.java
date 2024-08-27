@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -19,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class HomeFragment extends Fragment {
 
-    private TextView todaySchedule, completedAppts, estimatedRevenue, hoursBooked, chairUtilization, addressAndHours, info, photos, profilePicture;
+    private TextView addressAndHours, info, newAppointmentNotification, appointmentDetails;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private String barberId;
@@ -31,21 +32,17 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_home_fragment, container, false);
         initializeUI(view);
         setupFirebase();
-        loadHomeData();
+        loadNewAppointmentData();
         setOnClickListeners();
         return view;
     }
 
     private void initializeUI(View view) {
-        todaySchedule = view.findViewById(R.id.today_schedule);
-        completedAppts = view.findViewById(R.id.completed_appts);
-        estimatedRevenue = view.findViewById(R.id.estimated_revenue);
-        hoursBooked = view.findViewById(R.id.hours_booked);
-        chairUtilization = view.findViewById(R.id.chair_utilization);
         addressAndHours = view.findViewById(R.id.address_and_hours);
         info = view.findViewById(R.id.info);
-        photos = view.findViewById(R.id.photos);
-        profilePicture = view.findViewById(R.id.profile_picture);
+        newAppointmentNotification = view.findViewById(R.id.new_appointment_notification);
+        appointmentDetails = view.findViewById(R.id.appointment_details);
+        appointmentDetails.setVisibility(View.GONE); // Initially hidden
     }
 
     private void setupFirebase() {
@@ -54,41 +51,41 @@ public class HomeFragment extends Fragment {
         barberId = mAuth.getCurrentUser().getUid();
     }
 
-    private void loadHomeData() {
-        databaseReference.child(barberId).addValueEventListener(new ValueEventListener() {
+    private void loadNewAppointmentData() {
+        databaseReference.child(barberId).child("appointments").child("upcoming").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    updateUI(snapshot);
+                    for (DataSnapshot appointmentSnapshot : snapshot.getChildren()) {
+                        String customerName = appointmentSnapshot.child("customerName").getValue(String.class);
+                        String appointmentDate = appointmentSnapshot.child("date").getValue(String.class);
+                        String appointmentTime = appointmentSnapshot.child("time").getValue(String.class);
+
+                        String details = "Customer: " + customerName + "\nDate: " + appointmentDate + "\nTime: " + appointmentTime;
+                        appointmentDetails.setText(details);
+
+                        newAppointmentNotification.setVisibility(View.VISIBLE);
+                        appointmentDetails.setVisibility(View.GONE);
+
+                        newAppointmentNotification.setOnClickListener(v -> {
+                            appointmentDetails.setVisibility(View.VISIBLE);
+                            Toast.makeText(getContext(), "Appointment Details Shown", Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                } else {
+                    newAppointmentNotification.setText("No new appointments");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle possible errors
+                Toast.makeText(getContext(), "Failed to load appointment data.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void updateUI(DataSnapshot snapshot) {
-        String schedule = snapshot.child("schedule").getValue(String.class);
-        Integer completedAppointments = snapshot.child("completedAppointments").getValue(Integer.class);
-        Double revenue = snapshot.child("estimatedRevenue").getValue(Double.class);
-        Integer bookedHours = snapshot.child("hoursBooked").getValue(Integer.class);
-        Double utilization = snapshot.child("chairUtilization").getValue(Double.class);
-
-        todaySchedule.setText("Today's Schedule: " + (schedule != null ? schedule : "0"));
-        completedAppts.setText("Completed Appointments: " + (completedAppointments != null ? completedAppointments : "0"));
-        estimatedRevenue.setText("Estimated Revenue: " + (revenue != null ? revenue : "0"));
-        hoursBooked.setText("Hours Booked: " + (bookedHours != null ? bookedHours : "0"));
-        chairUtilization.setText("Chair Utilization: " + (utilization != null ? utilization : "0"));
-    }
-
     private void setOnClickListeners() {
         addressAndHours.setOnClickListener(v -> startActivity(new Intent(getContext(), AddressActivity.class)));
-        photos.setOnClickListener(v -> startActivity(new Intent(getContext(), PhotosActivity.class)));
-        profilePicture.setOnClickListener(v -> startActivity(new Intent(getContext(), ProfilePictureActivity.class)));
-        info.setOnClickListener(v -> startActivity(new Intent(getContext(), EditInfoActivity.class))); // Add this line
-
+        info.setOnClickListener(v -> startActivity(new Intent(getContext(), EditInfoActivity.class)));
     }
 }
