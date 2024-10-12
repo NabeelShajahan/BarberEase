@@ -1,7 +1,12 @@
 package com.example.barberease;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -17,7 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +34,6 @@ public class AppointmentsActivity extends AppCompatActivity {
     private List<Map<String, String>> pastAppointmentsList, upcomingAppointmentsList;
     private DatabaseReference databaseReference;
     private BottomNavigationView bottomNavigationView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +48,6 @@ public class AppointmentsActivity extends AppCompatActivity {
 
         setupRecyclerViews();
         fetchAppointmentsFromDatabase();
-        setupBottomNavigation();
-
     }
 
     private void setupRecyclerViews() {
@@ -53,82 +57,121 @@ public class AppointmentsActivity extends AppCompatActivity {
 
     private void fetchAppointmentsFromDatabase() {
         String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Assuming user is logged in
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        // Fetch past appointments
-        databaseReference.child("appointments").child("customers").child(customerId).child("past").addValueEventListener(new ValueEventListener() {
+        // Fetch appointments from Firebase
+        databaseReference.child("appointments").child("customers").child(customerId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 pastAppointmentsList = new ArrayList<>();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                upcomingAppointmentsList = new ArrayList<>();
+                Date today = new Date(); // Get current date
+
+                for (DataSnapshot dataSnapshot : snapshot.child("upcoming").getChildren()) {
                     Map<String, String> appointment = (Map<String, String>) dataSnapshot.getValue();
                     if (appointment != null) {
-                        pastAppointmentsList.add(appointment);
+                        try {
+                            Date appointmentDate = sdf.parse(appointment.get("date"));
+                            String appointmentId = dataSnapshot.getKey(); // Get appointment ID
+                            String barberId = appointment.get("barberId"); // Ensure barberId is available
+
+                            // Add barberId and appointmentId to the appointment map
+                            appointment.put("appointmentId", appointmentId);
+                            appointment.put("barberId", barberId);
+
+                            if (appointmentDate != null && appointmentDate.before(today)) {
+                                pastAppointmentsList.add(appointment); // Add to past if before today
+                            } else {
+                                upcomingAppointmentsList.add(appointment); // Add to upcoming if today or future
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 setupAdapter(pastAppointmentsRecyclerView, pastAppointmentsList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(AppointmentsActivity.this, "Failed to load past appointments.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Fetch upcoming appointments
-        databaseReference.child("appointments").child("customers").child(customerId).child("upcoming").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                upcomingAppointmentsList = new ArrayList<>();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Map<String, String> appointment = (Map<String, String>) dataSnapshot.getValue();
-                    if (appointment != null) {
-                        upcomingAppointmentsList.add(appointment);
-                    }
-                }
                 setupAdapter(upcomingAppointmentsRecyclerView, upcomingAppointmentsList);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(AppointmentsActivity.this, "Failed to load upcoming appointments.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AppointmentsActivity.this, "Failed to load appointments.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showAppointmentDetails(Map<String, String> appointment) {
+        String barberId = appointment.get("barberId");
+        String appointmentId = appointment.get("appointmentId");  // Ensure this is passed correctly
+
+        if (barberId != null && appointmentId != null) {
+            DatabaseReference appointmentRef = FirebaseDatabase.getInstance()
+                    .getReference("appointments/barbers/" + barberId + "/upcoming/" + appointmentId + "/status");
+
+            appointmentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String status = snapshot.getValue(String.class);
+
+                    // Debug log to check the value of status
+                    System.out.println("Appointment status from Firebase: " + status);
+
+                    String statusMessage;
+                    int statusColor;
+
+                    if ("Confirmed".equals(status)) {
+                        statusMessage = "Confirmed";
+                        statusColor = Color.GREEN;
+                    } else {
+                        statusMessage = "Pending";
+                        statusColor = Color.parseColor("#FFA500"); // Orange for pending
+                    }
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AppointmentsActivity.this);
+                    builder.setTitle("Appointment Details")
+                            .setMessage("Barber: " + appointment.get("barberName") + "\n" +
+                                    "Date: " + appointment.get("date") + "\n" +
+                                    "Time: " + appointment.get("time") + "\n" +
+                                    "Status: " + statusMessage)
+                            .setPositiveButton("OK", null)
+                            .show();
+
+                    // Get the alert dialog and update only the status text color
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    TextView messageTextView = dialog.findViewById(android.R.id.message);
+                    if (messageTextView != null) {
+                        String messageText = messageTextView.getText().toString();
+                        int startIndex = messageText.indexOf("Status:");
+                        if (startIndex != -1) {
+                            int endIndex = messageText.length(); // Till the end of message
+                            Spannable spannable = new SpannableString(messageText);
+                            spannable.setSpan(new ForegroundColorSpan(statusColor),
+                                    startIndex + 8, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            messageTextView.setText(spannable);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(AppointmentsActivity.this, "Failed to load appointment status.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(this, "Error: Missing appointment details.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setupAdapter(RecyclerView recyclerView, List<Map<String, String>> appointmentsList) {
         AppointmentsAdapter adapter = new AppointmentsAdapter(appointmentsList, this);
         recyclerView.setAdapter(adapter);
 
-        // Handle item click to show details
+        // Set click listener for showing details
         adapter.setOnItemClickListener(position -> {
             Map<String, String> appointment = appointmentsList.get(position);
             showAppointmentDetails(appointment);
         });
     }
 
-    private void showAppointmentDetails(Map<String, String> appointment) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Appointment Details")
-                .setMessage("Barber Name: " + appointment.get("barberName") + "\n" +
-                        "Date: " + appointment.get("date") + "\n" +
-                        "Time: " + appointment.get("time") + "\n" +
-                        "Address: " + appointment.get("address"))
-                .setPositiveButton("OK", null)
-                .show();
-    }
-    private void setupBottomNavigation() {
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_home) {
-                startActivity(new Intent(AppointmentsActivity.this, MainActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_appointments) {
-                return true; // We're already in AppointmentsActivity
-            } else if (itemId == R.id.nav_profile) {
-                startActivity(new Intent(AppointmentsActivity.this, ProfileActivity.class));
-                return true;
-            }
-            return false;
-        });
-    }
 }

@@ -1,6 +1,7 @@
 package com.example.barberease;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         this.context = context;
     }
 
-    // Interface for click events
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
@@ -41,10 +41,36 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     @Override
     public void onBindViewHolder(@NonNull AppointmentViewHolder holder, int position) {
         Map<String, String> appointment = appointmentList.get(position);
+        String status = appointment.get("status");
+
+        // Display the appointment details
         holder.barberNameTextView.setText(appointment.get("barberName"));
         holder.dateTextView.setText("Date: " + appointment.get("date"));
         holder.timeTextView.setText("Time: " + appointment.get("time"));
+
+        // Set the status text and its color based on the value
+        if ("Confirmed".equals(status)) {
+            holder.statusTextView.setText("Confirmed");
+            holder.statusTextView.setTextColor(Color.GREEN); // Green for confirmed
+        } else if ("Pending".equals(status)) {
+            holder.statusTextView.setText("Pending");
+            holder.statusTextView.setTextColor(Color.parseColor("#FFA500")); // Orange for pending
+        } else if ("Upcoming".equals(status)) {
+            holder.statusTextView.setText("Upcoming");
+            holder.statusTextView.setTextColor(Color.RED); // Red for upcoming
+        }
+
+        // Handle item click to show details in a dialog
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                int pos = holder.getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    onItemClickListener.onItemClick(pos);
+                }
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {
@@ -52,13 +78,14 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     }
 
     public static class AppointmentViewHolder extends RecyclerView.ViewHolder {
-        TextView barberNameTextView, dateTextView, timeTextView;
+        TextView barberNameTextView, dateTextView, timeTextView, statusTextView;
 
         public AppointmentViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             barberNameTextView = itemView.findViewById(R.id.barber_name);
             dateTextView = itemView.findViewById(R.id.appointment_date);
             timeTextView = itemView.findViewById(R.id.appointment_time);
+            statusTextView = itemView.findViewById(R.id.appointment_status);
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
