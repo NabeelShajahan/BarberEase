@@ -59,13 +59,12 @@ public class AppointmentsActivity extends AppCompatActivity {
         String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Assuming user is logged in
         final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        // Fetch appointments from Firebase
         databaseReference.child("appointments").child("customers").child(customerId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 pastAppointmentsList = new ArrayList<>();
                 upcomingAppointmentsList = new ArrayList<>();
-                Date today = new Date(); // Get current date
+                Date today = new Date();
 
                 for (DataSnapshot dataSnapshot : snapshot.child("upcoming").getChildren()) {
                     Map<String, String> appointment = (Map<String, String>) dataSnapshot.getValue();
@@ -75,7 +74,6 @@ public class AppointmentsActivity extends AppCompatActivity {
                             String appointmentId = dataSnapshot.getKey(); // Get appointment ID
                             String barberId = appointment.get("barberId"); // Ensure barberId is available
 
-                            // Add barberId and appointmentId to the appointment map
                             appointment.put("appointmentId", appointmentId);
                             appointment.put("barberId", barberId);
 
@@ -101,73 +99,29 @@ public class AppointmentsActivity extends AppCompatActivity {
     }
 
     private void showAppointmentDetails(Map<String, String> appointment) {
-        String barberId = appointment.get("barberId");
-        String appointmentId = appointment.get("appointmentId");  // Ensure this is passed correctly
+        String status = appointment.get("status"); // Retrieve the status from the appointment map
+        String statusMessage;
 
-        if (barberId != null && appointmentId != null) {
-            DatabaseReference appointmentRef = FirebaseDatabase.getInstance()
-                    .getReference("appointments/barbers/" + barberId + "/upcoming/" + appointmentId + "/status");
-
-            appointmentRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String status = snapshot.getValue(String.class);
-
-                    // Debug log to check the value of status
-                    System.out.println("Appointment status from Firebase: " + status);
-
-                    String statusMessage;
-                    int statusColor;
-
-                    if ("Confirmed".equals(status)) {
-                        statusMessage = "Confirmed";
-                        statusColor = Color.GREEN;
-                    } else {
-                        statusMessage = "Pending";
-                        statusColor = Color.parseColor("#FFA500"); // Orange for pending
-                    }
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(AppointmentsActivity.this);
-                    builder.setTitle("Appointment Details")
-                            .setMessage("Barber: " + appointment.get("barberName") + "\n" +
-                                    "Date: " + appointment.get("date") + "\n" +
-                                    "Time: " + appointment.get("time") + "\n" +
-                                    "Status: " + statusMessage)
-                            .setPositiveButton("OK", null)
-                            .show();
-
-                    // Get the alert dialog and update only the status text color
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                    TextView messageTextView = dialog.findViewById(android.R.id.message);
-                    if (messageTextView != null) {
-                        String messageText = messageTextView.getText().toString();
-                        int startIndex = messageText.indexOf("Status:");
-                        if (startIndex != -1) {
-                            int endIndex = messageText.length(); // Till the end of message
-                            Spannable spannable = new SpannableString(messageText);
-                            spannable.setSpan(new ForegroundColorSpan(statusColor),
-                                    startIndex + 8, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            messageTextView.setText(spannable);
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(AppointmentsActivity.this, "Failed to load appointment status.", Toast.LENGTH_SHORT).show();
-                }
-            });
+        if (status != null && status.equals("Confirmed")) {
+            statusMessage = "Confirmed";
         } else {
-            Toast.makeText(this, "Error: Missing appointment details.", Toast.LENGTH_SHORT).show();
+            statusMessage = "Pending";
         }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AppointmentsActivity.this);
+        builder.setTitle("Appointment Details")
+                .setMessage("Barber: " + appointment.get("barberName") + "\n" +
+                        "Date: " + appointment.get("date") + "\n" +
+                        "Time: " + appointment.get("time") + "\n" +
+                        "Status: " + statusMessage) // Display the status
+                .setPositiveButton("OK", null)
+                .show();
     }
 
     private void setupAdapter(RecyclerView recyclerView, List<Map<String, String>> appointmentsList) {
         AppointmentsAdapter adapter = new AppointmentsAdapter(appointmentsList, this);
         recyclerView.setAdapter(adapter);
 
-        // Set click listener for showing details
         adapter.setOnItemClickListener(position -> {
             Map<String, String> appointment = appointmentsList.get(position);
             showAppointmentDetails(appointment);

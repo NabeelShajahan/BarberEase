@@ -43,12 +43,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         Map<String, String> appointment = appointmentList.get(position);
         String status = appointment.get("status");
 
-        // Display the appointment details
         holder.barberNameTextView.setText(appointment.get("barberName"));
         holder.dateTextView.setText("Date: " + appointment.get("date"));
         holder.timeTextView.setText("Time: " + appointment.get("time"));
 
-        // Set the status text and its color based on the value
         if ("Confirmed".equals(status)) {
             holder.statusTextView.setText("Confirmed");
             holder.statusTextView.setTextColor(Color.GREEN); // Green for confirmed
@@ -60,7 +58,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             holder.statusTextView.setTextColor(Color.RED); // Red for upcoming
         }
 
-        // Handle item click to show details in a dialog
         holder.itemView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
                 int pos = holder.getAdapterPosition();
