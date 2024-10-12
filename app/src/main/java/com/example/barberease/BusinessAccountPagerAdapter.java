@@ -19,7 +19,7 @@ public class BusinessAccountPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new HomeFragment();
             case 1:
-                return new ReviewsFragment();
+                return new AppointmentsFragment();
             case 2:
                 return new ServicesFragment();
             default:
@@ -39,7 +39,7 @@ public class BusinessAccountPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return "HOME";
             case 1:
-                return "REVIEWS";
+                return "APPOINTMENTS";
             case 2:
                 return "SERVICES";
             default:

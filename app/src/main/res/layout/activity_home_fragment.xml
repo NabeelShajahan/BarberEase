@@ -13,7 +13,7 @@
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
         android:textColor="#FFD700"
-        android:text="Address &amp; Hours"
+        android:text="Address &amp;Hours"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -29,29 +29,16 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <!-- New Appointment Notification -->
+    <!-- View Appointments Link -->
     <TextView
-        android:id="@+id/new_appointment_notification"
+        android:id="@+id/view_appointments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/info"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
-        android:text="You have a new appointment!"
+        android:text="View Appointments"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <!-- Appointment Details (Initially Hidden) -->
-    <TextView
-        android:id="@+id/appointment_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/new_appointment_notification"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:padding="12dp"
-        android:background="@drawable/rounded_background"/>
+        android:textStyle="bold"/>
 </RelativeLayout>

@@ -154,4 +154,9 @@ public class BusinessAccountActivity extends AppCompatActivity {
     private void showToast(String message) {
         Toast.makeText(BusinessAccountActivity.this, message, Toast.LENGTH_SHORT).show();
     }
+
+    public ViewPager getViewPager() {
+        return viewPager;
+    }
+
 }

@@ -74,7 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent calendarIntent = new Intent(ProfileActivity.this, AppointmentsActivity.class);
                 startActivity(calendarIntent);
                 return true;
-            } else if (itemId == R.id.nav_profile) {
+            } else if (itemId == R.id.nav_list) {
                 return true;
             }
             return false;
